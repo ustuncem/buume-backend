@@ -1,3 +1,3 @@
-namespace BUUME.Domain.File;
+namespace BUUME.Domain.Files;
 
 public record Path(string Value);

@@ -1,6 +1,7 @@
 using BUUME.Domain.Abstractions;
+using BUUME.Domain.Files;
 
-namespace BUUME.Domain.File;
+namespace BUUME.Domain.Files;
 
 public sealed class File : Entity
 {

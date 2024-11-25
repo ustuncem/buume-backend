@@ -1,6 +1,6 @@
 using BUUME.Domain.Abstractions;
 
-namespace BUUME.Domain.File;
+namespace BUUME.Domain.Files;
 
 public record FileType
 {

@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace BUUME.Domain.File;
+namespace BUUME.Domain.Files;
 
 public record Checksum
 {
