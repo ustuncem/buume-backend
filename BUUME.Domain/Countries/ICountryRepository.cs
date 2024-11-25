@@ -1,6 +1,6 @@
 using BUUME.Domain.Abstractions;
 
-namespace BUUME.Domain.Country;
+namespace BUUME.Domain.Countries;
 
 public interface ICountryRepository : IRepository<Country>
 {

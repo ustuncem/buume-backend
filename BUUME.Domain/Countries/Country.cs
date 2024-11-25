@@ -1,6 +1,6 @@
 using BUUME.Domain.Abstractions;
 
-namespace BUUME.Domain.Country;
+namespace BUUME.Domain.Countries;
 
 public sealed class Country : Entity
 {

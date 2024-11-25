@@ -1,3 +1,3 @@
-namespace BUUME.Domain.Country;
+namespace BUUME.Domain.Countries;
 
 public record Code(string Value);
