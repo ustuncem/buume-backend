@@ -1,4 +1,6 @@
-namespace BUUME.Domain.Absractions;
+using BUUME.Domain.Abstractions.Events;
+
+namespace BUUME.Domain.Abstractions;
 
 public abstract class Entity(Guid id)
 {
@@ -8,6 +10,12 @@ public abstract class Entity(Guid id)
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; }
     public DateTime DeletedAt { get; set; }
+    
+    public void Delete<T>() where T : Entity
+    {
+        DeletedAt = DateTime.UtcNow;
+        RaiseDomainEvent(new EntityDeletedDomainEvent<T>(Id));
+    }
     
     public IReadOnlyList<IDomainEvent> GetDomainEvents()
     {

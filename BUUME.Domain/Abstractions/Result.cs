@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace BUUME.Domain.Absractions;
+namespace BUUME.Domain.Abstractions;
 
 public class Result
 {

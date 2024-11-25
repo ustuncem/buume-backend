@@ -1,4 +1,4 @@
-namespace BUUME.Domain.Absractions;
+namespace BUUME.Domain.Abstractions;
 
 public record Error(string Code, string Name)
 {
