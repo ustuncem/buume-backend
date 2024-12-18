@@ -1,0 +1,6 @@
+@BUUME.Api_HostAddress = http://localhost:5046
+
+GET {{BUUME.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

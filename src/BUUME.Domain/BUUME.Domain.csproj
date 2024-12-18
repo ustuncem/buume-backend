@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="CampaignSchedules\" />
+      <Folder Include="Campaigns\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BUUME.SharedKernel\BUUME.SharedKernel.csproj" />
+    </ItemGroup>
+
+</Project>
