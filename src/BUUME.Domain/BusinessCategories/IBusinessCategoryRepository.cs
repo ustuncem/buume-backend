@@ -4,5 +4,5 @@ namespace BUUME.Domain.BusinessCategories;
 
 public interface IBusinessCategoryRepository : IRepository<BusinessCategory>
 {
-    Task<IReadOnlyList<BusinessCategory>> GetAllAsync();
+    Task<IReadOnlyList<BusinessCategory>> GetAllAsync(CancellationToken cancellationToken = default);
 }

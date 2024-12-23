@@ -1,34 +1,29 @@
 using Asp.Versioning;
-using BUUME.Application.TaxOffices.CreateTaxOffice;
-using BUUME.Application.TaxOffices.DeleteTaxOffice;
-using BUUME.Application.TaxOffices.GetAllTaxOffices;
-using BUUME.Application.TaxOffices.GetTaxOfficeById;
-using BUUME.Application.TaxOffices.UpdateTaxOffice;
+using BUUME.Application.BusinessCategories.CreateBusinessCategory;
 using BUUME.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TaxOfficeResponse = BUUME.Application.TaxOffices.GetTaxOfficeById.TaxOfficeResponse;
 
-namespace BUUME.Api.Controllers.TaxOffices;
+namespace BUUME.Api.Controllers.BusinessCategories;
 
 [ApiVersion("1")]
-[Route("api/v{version:apiVersion}/taxoffices")]
+[Route("api/v{version:apiVersion}/businesscategories")]
 [ApiController]
-public class TaxOfficesController(ISender sender) : ControllerBase
+public class BusinessCategoriesController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
     
-    [HttpGet]
-    [ProducesResponseType(typeof(Result<IReadOnlyList<TaxOfficeResponse>>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<Result<Guid>>> GetAllTaxOffices(
-        CancellationToken cancellationToken = default)
-    {
-        var query = new GetAllTaxOfficesQuery();
-        var result = await _sender.Send(query, cancellationToken);
-        return Ok(result);
-    }
+    // [HttpGet]
+    // [ProducesResponseType(typeof(Result<IReadOnlyList<TaxOfficeResponse>>), StatusCodes.Status200OK)]
+    // public async Task<ActionResult<Result<Guid>>> GetAllTaxOffices(
+    //     CancellationToken cancellationToken = default)
+    // {
+    //     var query = new GetAllTaxOfficesQuery();
+    //     var result = await _sender.Send(query, cancellationToken);
+    //     return Ok(result);
+    // }
     
-    [HttpGet("{id:guid}")]
+    /*[HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(Result<TaxOfficeResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<Result<Guid>>> GetTaxOfficeById(
@@ -43,16 +38,16 @@ public class TaxOfficesController(ISender sender) : ControllerBase
             return NotFound(new { Error = result.Error });
 
         return Ok(result);
-    }
+    }*/
 
     [HttpPost]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Result<Guid>>> CreateTaxOffice(
-        [FromBody] CreateTaxOfficeRequest createTaxOfficeRequest, 
+    public async Task<ActionResult<Result<Guid>>> CreateBusinessCategory(
+        [FromBody] CreateBusinessCategoryRequest createBusinessCategoryRequest, 
         CancellationToken cancellationToken = default)
     {
-        var command = new CreateTaxOfficeCommand(createTaxOfficeRequest.name);
+        var command = new CreateBusinessCategoryCommand(createBusinessCategoryRequest.name);
 
         var result = await _sender.Send(command, cancellationToken);
 
@@ -62,7 +57,7 @@ public class TaxOfficesController(ISender sender) : ControllerBase
         return Ok(result);
     }
     
-    [HttpPut("{id:guid}")]
+    /*[HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Result<Guid>>> UpdateTaxOffice(
@@ -78,9 +73,9 @@ public class TaxOfficesController(ISender sender) : ControllerBase
             return BadRequest(new { Error = result.Error });
 
         return Ok(result);
-    }
+    }*/
     
-    [HttpDelete("{id:guid}")]
+    /*[HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Result<Guid>>> DeleteTaxOffice(
@@ -95,5 +90,5 @@ public class TaxOfficesController(ISender sender) : ControllerBase
             return BadRequest(new { Error = result.Error });
 
         return Ok(result);
-    }
+    }*/
 }

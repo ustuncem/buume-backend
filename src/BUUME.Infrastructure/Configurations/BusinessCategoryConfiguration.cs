@@ -1,14 +1,14 @@
-using BUUME.Domain.TaxOffices;
+using BUUME.Domain.BusinessCategories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace BUUME.Infrastructure.Configurations;
 
-internal sealed class TaxOfficeConfiguration : IEntityTypeConfiguration<TaxOffice>
+internal sealed class BusinessCategoryConfiguration : IEntityTypeConfiguration<BusinessCategory>
 {
-    public void Configure(EntityTypeBuilder<TaxOffice> builder)
+    public void Configure(EntityTypeBuilder<BusinessCategory> builder)
     {
-        builder.ToTable("tax_offices");
+        builder.ToTable("business_categories");
         
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Name).HasMaxLength(500)

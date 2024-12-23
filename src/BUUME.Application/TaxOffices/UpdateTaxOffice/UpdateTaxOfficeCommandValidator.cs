@@ -6,6 +6,7 @@ internal sealed class UpdateTaxOfficeCommandValidator : AbstractValidator<Update
 {
     public UpdateTaxOfficeCommandValidator()
     {
-        RuleFor(to => to.Name).NotEmpty();
+        RuleFor(to => to.Name).NotEmpty().Matches("^[a-zA-ZÇçĞğİıÖöŞşÜü]+( [a-zA-ZÇçĞğİıÖöŞşÜü]+)*$")
+            .WithErrorCode(TaxOfficeErrorCodes.CreateTaxOffice.InvalidName);;
     }
 }

@@ -22,6 +22,37 @@ namespace BUUME.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("BUUME.Domain.BusinessCategories.BusinessCategory", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("name");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id")
+                        .HasName("pk_business_categories");
+
+                    b.ToTable("business_categories", (string)null);
+                });
+
             modelBuilder.Entity("BUUME.Domain.TaxOffices.TaxOffice", b =>
                 {
                     b.Property<Guid>("Id")
@@ -50,7 +81,7 @@ namespace BUUME.Infrastructure.Migrations
                     b.HasKey("Id")
                         .HasName("pk_tax_offices");
 
-                    b.ToTable("TaxOffices", (string)null);
+                    b.ToTable("tax_offices", (string)null);
                 });
 #pragma warning restore 612, 618
         }

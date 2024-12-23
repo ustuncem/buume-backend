@@ -18,7 +18,7 @@ internal sealed class CreateTaxOfficeCommandHandler(
         var taxOffice = new TaxOffice(taxOfficeId, taxOfficeName);
         
         taxOfficeRepository.Add(taxOffice);
-        await unitOfWork.SaveChangesAsync();
+        await unitOfWork.SaveChangesAsync(cancellationToken);
         
         return taxOfficeId;
     }

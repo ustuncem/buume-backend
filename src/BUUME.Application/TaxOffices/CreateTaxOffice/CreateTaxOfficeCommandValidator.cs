@@ -9,7 +9,7 @@ internal sealed class CreateTaxOfficeCommandValidator : AbstractValidator<Create
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithErrorCode(TaxOfficeErrorCodes.CreateTaxOffice.MissingName)
-            .Matches("^[a-zA-Z]+$")
+            .Matches("^[a-zA-ZÇçĞğİıÖöŞşÜü]+( [a-zA-ZÇçĞğİıÖöŞşÜü]+)*$")
             .WithErrorCode(TaxOfficeErrorCodes.CreateTaxOffice.InvalidName);
     }
 }
