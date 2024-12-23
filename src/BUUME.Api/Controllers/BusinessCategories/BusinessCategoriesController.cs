@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using BUUME.Application.BusinessCategories.CreateBusinessCategory;
+using BUUME.Application.BusinessCategories.DeleteBusinessCategory;
 using BUUME.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -75,14 +76,14 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
         return Ok(result);
     }*/
     
-    /*[HttpDelete("{id:guid}")]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Result<Guid>>> DeleteTaxOffice(
+    public async Task<ActionResult<Result<Guid>>> DeleteBusinessCategory(
         [FromRoute] Guid id,
         CancellationToken cancellationToken = default)
     {
-        var command = new DeleteTaxOfficeCommand(id);
+        var command = new DeleteBusinessCategoryCommand(id);
 
         var result = await _sender.Send(command, cancellationToken);
 
@@ -90,5 +91,5 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
             return BadRequest(new { Error = result.Error });
 
         return Ok(result);
-    }*/
+    }
 }
