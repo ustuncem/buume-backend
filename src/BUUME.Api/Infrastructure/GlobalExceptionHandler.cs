@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+﻿using BUUME.SharedKernel;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace BUUME.Api.Infrastructure;
 
@@ -13,16 +13,22 @@ internal sealed class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> log
     {
         logger.LogError(exception, "Unhandled exception occurred");
 
-        var problemDetails = new ProblemDetails
+        if (exception is FluentValidation.ValidationException validationException)
         {
-            Status = StatusCodes.Status500InternalServerError,
-            Type = "https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1",
-            Title = "Server failure"
-        };
+            var validationErrors = validationException.Errors.Select(e => e.ErrorCode);
+            var validationMessage = string.Join(',', validationErrors);
+            httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            var validationResult = Result.Failure(new(StatusCodes.Status400BadRequest.ToString(), validationMessage,
+                ErrorType.Validation));
+            await httpContext.Response.WriteAsJsonAsync(validationResult, cancellationToken);
 
-        httpContext.Response.StatusCode = problemDetails.Status.Value;
+            return true;
+        }
 
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+        var result = Result.Failure(Error.Failure(StatusCodes.Status500InternalServerError.ToString(), "Internal server error."));
+        httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+        await httpContext.Response.WriteAsJsonAsync(result, cancellationToken);
 
         return true;
     }

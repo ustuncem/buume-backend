@@ -1,9 +1,9 @@
 using BUUME.Application.Abstractions.Caching;
 using BUUME.Application.Abstractions.Data;
 using BUUME.Domain.TaxOffices;
-using BUUME.Domain.Users;
 using BUUME.Infrastructure.Caching;
 using BUUME.Infrastructure.Repositories;
+using BUUME.Infrastructure.Time;
 using BUUME.SharedKernel;
 using Dapper;
 using Microsoft.EntityFrameworkCore;
@@ -19,9 +19,17 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         return services
+            .AddServices()
             .AddDatabase(configuration)
             .AddCaching(configuration)
             .AddHealthChecks(configuration);
+    }
+    
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+
+        return services;
     }
     
     private static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)

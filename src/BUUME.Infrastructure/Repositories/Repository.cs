@@ -9,9 +9,8 @@ internal abstract class Repository<T>(ApplicationDbContext dbContext) : IReposit
     
     public Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        return DbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id, cancellationToken);
+        return DbContext.Set<T>().FirstOrDefaultAsync(e => e.Id == id, cancellationToken) ?? null;
     }
-
     public void Add(T entity)
     {
         DbContext.Set<T>().Add(entity);

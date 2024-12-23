@@ -1,12 +1,15 @@
-using BUUME.Application.TaxOffices.CreateTaxOffice;
 using FluentValidation;
 
 namespace BUUME.Application.TaxOffices.CreateTaxOffice;
 
-public class CreateTaxOfficeCommandValidator : AbstractValidator<CreateTaxOfficeCommand>
+internal sealed class CreateTaxOfficeCommandValidator : AbstractValidator<CreateTaxOfficeCommand>
 {
     public CreateTaxOfficeCommandValidator()
     {
-        RuleFor(to => to.Name).NotEmpty();
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .WithErrorCode(TaxOfficeErrorCodes.CreateTaxOffice.MissingName)
+            .Matches("^[a-zA-Z]+$")
+            .WithErrorCode(TaxOfficeErrorCodes.CreateTaxOffice.InvalidName);
     }
 }

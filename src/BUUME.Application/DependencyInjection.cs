@@ -13,13 +13,11 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
 
             configuration.AddOpenBehavior(typeof(RequestLoggingPipelineBehavior<,>));
-
             configuration.AddOpenBehavior(typeof(ValidationPipelineBehavior<,>));
-            
             configuration.AddOpenBehavior(typeof(QueryCachingPipelineBehavior<,>));
         });
         
-        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
+        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly, includeInternalTypes: true);
         
         return services;
     }

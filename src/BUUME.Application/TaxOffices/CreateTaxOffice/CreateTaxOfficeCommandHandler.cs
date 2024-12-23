@@ -10,8 +10,6 @@ internal sealed class CreateTaxOfficeCommandHandler(
     IUnitOfWork unitOfWork)
     : ICommandHandler<CreateTaxOfficeCommand, Guid>
 {
-    private readonly ITaxOfficeRepository _taxOfficeRepository = taxOfficeRepository;
-    private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
     public async Task<Result<Guid>> Handle(CreateTaxOfficeCommand request, CancellationToken cancellationToken)
     {
@@ -19,8 +17,8 @@ internal sealed class CreateTaxOfficeCommandHandler(
         var taxOfficeName = new Name(request.Name);
         var taxOffice = new TaxOffice(taxOfficeId, taxOfficeName);
         
-        _taxOfficeRepository.Add(taxOffice);
-        await _unitOfWork.SaveChangesAsync();
+        taxOfficeRepository.Add(taxOffice);
+        await unitOfWork.SaveChangesAsync();
         
         return taxOfficeId;
     }
