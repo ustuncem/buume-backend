@@ -1,6 +1,7 @@
 using Asp.Versioning;
 using BUUME.Application.BusinessCategories.CreateBusinessCategory;
 using BUUME.Application.BusinessCategories.DeleteBusinessCategory;
+using BUUME.Application.BusinessCategories.UpdateBusinessCategory;
 using BUUME.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ namespace BUUME.Api.Controllers.BusinessCategories;
 public class BusinessCategoriesController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
-    
+
     // [HttpGet]
     // [ProducesResponseType(typeof(Result<IReadOnlyList<TaxOfficeResponse>>), StatusCodes.Status200OK)]
     // public async Task<ActionResult<Result<Guid>>> GetAllTaxOffices(
@@ -23,7 +24,7 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
     //     var result = await _sender.Send(query, cancellationToken);
     //     return Ok(result);
     // }
-    
+
     /*[HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(Result<TaxOfficeResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
@@ -45,7 +46,7 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Result<Guid>>> CreateBusinessCategory(
-        [FromBody] CreateBusinessCategoryRequest createBusinessCategoryRequest, 
+        [FromBody] CreateBusinessCategoryRequest createBusinessCategoryRequest,
         CancellationToken cancellationToken = default)
     {
         var command = new CreateBusinessCategoryCommand(createBusinessCategoryRequest.name);
@@ -57,16 +58,16 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
 
         return Ok(result);
     }
-    
-    /*[HttpPut("{id:guid}")]
+
+    [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<Result<Guid>>> UpdateTaxOffice(
+    public async Task<ActionResult<Result<Guid>>> UpdateBusinessCategory(
         [FromRoute] Guid id,
-        [FromBody] UpdateTaxOfficeRequest updateTaxOfficeRequest, 
+        [FromBody] UpdateBusinessCategoryRequest updateBusinessCategoryRequest,
         CancellationToken cancellationToken = default)
     {
-        var command = new UpdateTaxOfficeCommand(id, updateTaxOfficeRequest.name);
+        var command = new UpdateBusinessCategoryCommand(id, updateBusinessCategoryRequest.name);
 
         var result = await _sender.Send(command, cancellationToken);
 
@@ -74,8 +75,8 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
             return BadRequest(new { Error = result.Error });
 
         return Ok(result);
-    }*/
-    
+    }
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
