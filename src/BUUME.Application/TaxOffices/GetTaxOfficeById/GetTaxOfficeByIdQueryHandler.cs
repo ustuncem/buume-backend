@@ -2,7 +2,6 @@
 using BUUME.Application.Abstractions.Data;
 using BUUME.Application.Abstractions.Messaging;
 using BUUME.Domain.TaxOffices;
-using BUUME.Domain.Users;
 using BUUME.SharedKernel;
 using Dapper;
 
