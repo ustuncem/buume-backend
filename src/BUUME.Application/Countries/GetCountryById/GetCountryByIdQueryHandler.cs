@@ -15,12 +15,12 @@ internal sealed class GetCountryByIdQueryHandler(IDbConnectionFactory factory)
         const string sql =
             """
             SELECT
-                country.id AS Id,
-                country.name AS Name,
-                country.code AS Code,
-                country.has_region AS HasRegion
-            FROM "countries" country
-            WHERE country.id = @CountryId
+                c.id AS Id,
+                c.name AS Name,
+                c.code AS Code,
+                c.has_region AS HasRegion
+            FROM "countries" c
+            WHERE c.id = @CountryId
             """;
 
         using IDbConnection connection = factory.GetOpenConnection();

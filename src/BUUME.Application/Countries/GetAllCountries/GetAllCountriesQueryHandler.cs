@@ -14,11 +14,9 @@ internal sealed class GetAllTaxOfficeQueryHandler(IDbConnectionFactory factory)
         const string sql =
             """
             SELECT
-                country.id AS Id,
-                country.name AS Name,
-                country.code AS Code,
-                country.has_region AS HasRegion
-            FROM "countries" country
+                c.id AS Id,
+                c.name AS Name
+            FROM "countries" c
             """;
 
         using IDbConnection connection = factory.GetOpenConnection();

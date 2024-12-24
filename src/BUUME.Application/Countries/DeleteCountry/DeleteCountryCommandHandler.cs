@@ -13,7 +13,7 @@ internal sealed class DeleteCountryCommandHandler(ICountryRepository countryRepo
     public async Task<Result<bool>> Handle(DeleteCountryCommand request, CancellationToken cancellationToken)
     {
         var country = await _countryRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (country == null) return Result.Failure<bool>(CountryErrors.NotFound(request.Id)); // CountryErrors.cs has been added to Domain/Countries folder
+        if (country == null) return Result.Failure<bool>(CountryErrors.NotFound(request.Id));
 
         country.Delete<Country>();
         await _unitOfWork.SaveChangesAsync(cancellationToken);
