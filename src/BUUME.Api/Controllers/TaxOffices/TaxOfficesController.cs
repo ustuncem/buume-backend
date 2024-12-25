@@ -21,9 +21,10 @@ public class TaxOfficesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(Result<IReadOnlyList<TaxOfficeResponse>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<Guid>>> GetAllTaxOffices(
+        [FromQuery] GetAllTaxOfficesRequest request,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetAllTaxOfficesQuery();
+        var query = new GetAllTaxOfficesQuery(request.searchTerm);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

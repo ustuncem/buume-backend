@@ -21,9 +21,10 @@ public class CountriesController(ISender sender) : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(Result<IReadOnlyList<CountryResponse>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<Guid>>> GetAllCountries(
+        [FromQuery] GetAllCountriesRequest request,
         CancellationToken cancellationToken = default)
     {
-        var query = new GetAllCountriesQuery();
+        var query = new GetAllCountriesQuery(request.searchTerm);
         var result = await _sender.Send(query, cancellationToken);
         return Ok(result);
     }

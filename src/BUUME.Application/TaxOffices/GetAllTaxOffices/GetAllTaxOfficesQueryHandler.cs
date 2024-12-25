@@ -17,13 +17,16 @@ internal sealed class GetAllTaxOfficeQueryHandler(IDbConnectionFactory factory)
                 tax.id AS Id,
                 tax.name AS Name
             FROM "tax_offices" tax
+            WHERE tax.deleted_at IS NULL
+            AND (@SearchTerm IS NULL OR tax.name ILIKE @SearchTerm)
             """;
 
         using IDbConnection connection = factory.GetOpenConnection();
 
         var taxOffice = await connection.QueryAsync<TaxOfficeResponse>(
             sql,
-            query);
+            new { SearchTerm = $"%{query.SearchTerm}%"}
+            );
 
         return taxOffice.ToList();
     }

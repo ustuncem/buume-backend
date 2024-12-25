@@ -17,13 +17,19 @@ internal sealed class GetAllTaxOfficeQueryHandler(IDbConnectionFactory factory)
                 c.id AS Id,
                 c.name AS Name
             FROM "countries" c
+            WHERE c.deleted_at IS NULL
+            AND (
+                c.name ILIKE @SearchTerm OR
+                c.Code ILIKE @SearchTerm
+                )
             """;
 
         using IDbConnection connection = factory.GetOpenConnection();
 
         var countries = await connection.QueryAsync<CountryResponse>(
             sql,
-            query);
+            new { SearchTerm = $"%{query.SearchTerm}%"}
+            );
 
         return countries.ToList();
     }

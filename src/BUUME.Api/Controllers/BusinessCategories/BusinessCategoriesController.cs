@@ -1,6 +1,8 @@
 using Asp.Versioning;
+using BUUME.Api.Requests;
 using BUUME.Application.BusinessCategories.CreateBusinessCategory;
 using BUUME.Application.BusinessCategories.DeleteBusinessCategory;
+using BUUME.Application.BusinessCategories.GetAllBusinessCategories;
 using BUUME.Application.BusinessCategories.UpdateBusinessCategory;
 using BUUME.SharedKernel;
 using MediatR;
@@ -15,15 +17,16 @@ public class BusinessCategoriesController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
 
-    // [HttpGet]
-    // [ProducesResponseType(typeof(Result<IReadOnlyList<TaxOfficeResponse>>), StatusCodes.Status200OK)]
-    // public async Task<ActionResult<Result<Guid>>> GetAllTaxOffices(
-    //     CancellationToken cancellationToken = default)
-    // {
-    //     var query = new GetAllTaxOfficesQuery();
-    //     var result = await _sender.Send(query, cancellationToken);
-    //     return Ok(result);
-    // }
+    [HttpGet]
+    [ProducesResponseType(typeof(Result<IReadOnlyList<BusinessCategoryResponse>>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<IReadOnlyList<BusinessCategoryResponse>>>> GetAllBusinessCategories(
+        [FromQuery] GetAllBusinessCategoriesRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetAllBusinessCategoriesQuery(request.searchTerm);
+        var result = await _sender.Send(query, cancellationToken);
+        return Ok(result);
+    }
 
     /*[HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(Result<TaxOfficeResponse>), StatusCodes.Status200OK)]

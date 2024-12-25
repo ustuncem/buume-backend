@@ -24,5 +24,6 @@ public sealed class Country : Entity
     {
         Name = name;
         Code = code;
+        UpdatedAt = DateTime.UtcNow;
     }
 }
