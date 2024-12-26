@@ -20,6 +20,8 @@ public class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerGenOptio
         {
             options.SwaggerDoc(description.GroupName, CreateVersionInfo(description));
         }
+        
+        options.CustomSchemaIds(type => type.ToString());
     }
 
     public void Configure(string? name, SwaggerGenOptions options)
@@ -31,7 +33,7 @@ public class ConfigureSwaggerGenOptions : IConfigureNamedOptions<SwaggerGenOptio
     {
         var openApiInfo = new OpenApiInfo
         {
-            Title = $"RunTrackr.Api v{apiVersionDescription.ApiVersion}",
+            Title = $"BUUME.Api v{apiVersionDescription.ApiVersion}",
             Version = apiVersionDescription.ApiVersion.ToString()
         };
 
