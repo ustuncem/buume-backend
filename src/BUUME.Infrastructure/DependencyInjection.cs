@@ -1,5 +1,6 @@
 using BUUME.Application.Abstractions.Caching;
 using BUUME.Application.Abstractions.Data;
+using BUUME.Application.Abstractions.Sms;
 using BUUME.Domain.BusinessCategories;
 using BUUME.Domain.CampaignTypes;
 using BUUME.Domain.Cities;
@@ -9,6 +10,7 @@ using BUUME.Domain.TaxOffices;
 using BUUME.Infrastructure.Caching;
 using BUUME.Infrastructure.Outbox;
 using BUUME.Infrastructure.Repositories;
+using BUUME.Infrastructure.Sms;
 using BUUME.Infrastructure.Time;
 using BUUME.SharedKernel;
 using Dapper;
@@ -64,6 +66,7 @@ public static class DependencyInjection
         services.AddScoped<ICampaignTypeRepository, CampaignTypeRepository>();
         services.AddScoped<IRegionRepository, RegionRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
+        services.AddScoped<ISmsService, SmsService>();
 
         return services;
     }
