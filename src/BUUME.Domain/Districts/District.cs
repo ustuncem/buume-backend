@@ -8,9 +8,10 @@ public sealed class District(Guid id, Name name, Code code, Guid cityId) : Entit
     public Code Code { get; private set; } = code;
     public Guid CityId { get; private set; } = cityId;
 
-    public District UpdateName(Name name, Guid cityId)
+    public District Update(Name name, Code code, Guid cityId)
     {
         Name = name;
+        Code = code;
         CityId = cityId;
         UpdatedAt = DateTime.UtcNow;
         
