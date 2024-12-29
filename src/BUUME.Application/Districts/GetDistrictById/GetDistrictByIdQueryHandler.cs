@@ -1,9 +1,6 @@
 ﻿using System.Data;
 using BUUME.Application.Abstractions.Data;
 using BUUME.Application.Abstractions.Messaging;
-using BUUME.Application.Cities.GetCityById;
-using BUUME.Application.Countries.GetCountryById;
-using BUUME.Domain.Cities;
 using BUUME.Domain.Districts;
 using BUUME.SharedKernel;
 using Dapper;
@@ -25,7 +22,7 @@ internal sealed class GetDistrictByIdQueryHandler(IDbConnectionFactory factory)
                 c.code AS Code
             FROM "districts" d
             LEFT JOIN "cities" c ON d.city_id = c.id
-            WHERE d.id = @DistrictId;
+            WHERE d.id = @DistrictId AND d.deleted_at IS NULL;
             """;
 
         using IDbConnection connection = factory.GetOpenConnection();
@@ -40,13 +37,13 @@ internal sealed class GetDistrictByIdQueryHandler(IDbConnectionFactory factory)
             query,
             splitOn: "Name");
         
-        var district = sqlResponse.FirstOrDefault();
+        var city = sqlResponse.FirstOrDefault();
 
-        if (district is null)
+        if (city is null)
         {
             return Result.Failure<DistrictResponse>(DistrictErrors.NotFound(query.DistrictId));
         }
 
-        return district;
+        return city;
     }
 }
