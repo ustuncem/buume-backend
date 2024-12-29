@@ -1,3 +1,3 @@
 namespace BUUME.Domain.Cities;
 
-public sealed record Code(int Value);
+public sealed record Code(string Value);

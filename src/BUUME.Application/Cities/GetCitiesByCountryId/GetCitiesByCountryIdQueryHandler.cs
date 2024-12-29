@@ -4,19 +4,19 @@ using BUUME.Application.Abstractions.Messaging;
 using BUUME.SharedKernel;
 using Dapper;
 
-namespace BUUME.Application.Regions.GetRegionsByCountryId;
+namespace BUUME.Application.Cities.GetCitiesByCountryId;
 
-internal sealed class GetRegionsByCountryIdQueryHandler(IDbConnectionFactory factory)
-    : IQueryHandler<GetRegionsByCountryIdQuery, IReadOnlyList<RegionResponse>>
+internal sealed class GetCitiesByCountryIdQueryHandler(IDbConnectionFactory factory)
+    : IQueryHandler<GetCitiesByCountryIdQuery, IReadOnlyList<CityResponse>>
 {
-    public async Task<Result<IReadOnlyList<RegionResponse>>> Handle(GetRegionsByCountryIdQuery query, CancellationToken cancellationToken)
+    public async Task<Result<IReadOnlyList<CityResponse>>> Handle(GetCitiesByCountryIdQuery query, CancellationToken cancellationToken)
     {
         const string sql =
             """
             SELECT
                 c.id AS Id,
                 c.name AS Name
-            FROM "regions" c
+            FROM "cities" c
             WHERE c.deleted_at IS NULL
             AND c.name ILIKE @SearchTerm 
             AND c.country_id = @CountryId
@@ -24,11 +24,11 @@ internal sealed class GetRegionsByCountryIdQueryHandler(IDbConnectionFactory fac
 
         using IDbConnection connection = factory.GetOpenConnection();
 
-        var regions = await connection.QueryAsync<RegionResponse>(
+        var cities = await connection.QueryAsync<CityResponse>(
             sql,
             new { SearchTerm = $"%{query.SearchTerm}%", query.CountryId}
             );
 
-        return regions.ToList();
+        return cities.ToList();
     }
 }
