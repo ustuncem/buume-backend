@@ -7,6 +7,7 @@ using BUUME.Domain.Countries;
 using BUUME.Domain.Regions;
 using BUUME.Domain.TaxOffices;
 using BUUME.Infrastructure.Caching;
+using BUUME.Infrastructure.Outbox;
 using BUUME.Infrastructure.Repositories;
 using BUUME.Infrastructure.Time;
 using BUUME.SharedKernel;
@@ -16,6 +17,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
+using Quartz;
 
 namespace BUUME.Infrastructure;
 
@@ -26,6 +28,7 @@ public static class DependencyInjection
         return services
             .AddServices()
             .AddDatabase(configuration)
+            .AddBackgroundJobs(configuration)
             .AddCaching(configuration)
             .AddHealthChecks(configuration);
     }
@@ -83,6 +86,16 @@ public static class DependencyInjection
             .AddNpgSql(configuration.GetConnectionString("Database")!)
             .AddRedis(configuration.GetConnectionString("Cache")!);
 
+        return services;
+    }
+    
+    private static IServiceCollection AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<OutboxOptions>(configuration.GetSection("Outbox"));
+        services.AddQuartz();
+        services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
+        services.ConfigureOptions<ProcessOutboxMessagesJobSetup>();
+        
         return services;
     }
 }

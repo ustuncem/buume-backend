@@ -1,3 +1,4 @@
+using BUUME.Domain.Countries.Events;
 using BUUME.SharedKernel;
 
 namespace BUUME.Domain.Countries;
@@ -17,6 +18,7 @@ public sealed class Country : Entity
     public static Country Create(Name name, Code code, HasRegion hasRegion)
     {
         var country = new Country(Guid.NewGuid(), name, code, hasRegion);
+        country.RaiseDomainEvent(new CountryCreatedDomainEvent(country.Id));
         return country;
     }
 
