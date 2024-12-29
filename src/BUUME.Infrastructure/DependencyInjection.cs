@@ -2,6 +2,7 @@ using BUUME.Application.Abstractions.Caching;
 using BUUME.Application.Abstractions.Data;
 using BUUME.Domain.BusinessCategories;
 using BUUME.Domain.CampaignTypes;
+using BUUME.Domain.Cities;
 using BUUME.Domain.Countries;
 using BUUME.Domain.Regions;
 using BUUME.Domain.TaxOffices;
@@ -59,6 +60,7 @@ public static class DependencyInjection
         services.AddScoped<ICountryRepository, CountryRepository>();
         services.AddScoped<ICampaignTypeRepository, CampaignTypeRepository>();
         services.AddScoped<IRegionRepository, RegionRepository>();
+        services.AddScoped<ICityRepository, CityRepository>();
 
         return services;
     }
