@@ -21,5 +21,7 @@ internal sealed class CountryConfiguration : IEntityTypeConfiguration<Country>
             .HasDefaultValue(new HasRegion(true))
             .HasConversion(hasRegion => hasRegion.Value, value => new HasRegion(value));
         builder.HasQueryFilter(t => t.DeletedAt == null);
+        
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }

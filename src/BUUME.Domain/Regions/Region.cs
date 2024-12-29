@@ -18,6 +18,11 @@ public sealed class Region : Entity
         var region = new Region(Guid.NewGuid(), name, countryId);
         return region;
     }
-    
-    public void Update(Name name) => Name = name;
+
+    public void Update(Name name, Guid countryId)
+    {
+        Name = name;
+        CountryId = countryId;
+        UpdatedAt = DateTime.UtcNow;
+    }
 }

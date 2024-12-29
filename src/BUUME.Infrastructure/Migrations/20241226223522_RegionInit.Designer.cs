@@ -3,6 +3,7 @@ using System;
 using BUUME.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BUUME.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241226223522_RegionInit")]
+    partial class RegionInit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,6 +180,7 @@ namespace BUUME.Infrastructure.Migrations
                         .HasName("pk_regions");
 
                     b.HasIndex("CountryId")
+                        .IsUnique()
                         .HasDatabaseName("ix_regions_country_id");
 
                     b.ToTable("regions", (string)null);
@@ -216,8 +220,8 @@ namespace BUUME.Infrastructure.Migrations
             modelBuilder.Entity("BUUME.Domain.Regions.Region", b =>
                 {
                     b.HasOne("BUUME.Domain.Countries.Country", null)
-                        .WithMany()
-                        .HasForeignKey("CountryId")
+                        .WithOne()
+                        .HasForeignKey("BUUME.Domain.Regions.Region", "CountryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_regions_countries_country_id");
