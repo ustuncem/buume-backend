@@ -2,6 +2,6 @@
 {
     public interface ISmsService
     {
-        Task SendAsync(Domain.Users.PhoneNumber phoneNumber, string message);
+        Task SendAsync(string phoneNumber, string message);
     }
 }

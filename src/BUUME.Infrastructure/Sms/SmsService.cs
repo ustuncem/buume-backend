@@ -4,7 +4,7 @@ namespace BUUME.Infrastructure.Sms
 {
     internal sealed class SmsService : ISmsService
     {
-        public Task SendAsync(Domain.Users.PhoneNumber phoneNumber, string message)
+        public Task SendAsync(string phoneNumber, string message)
         {
             return Task.CompletedTask;
         }
