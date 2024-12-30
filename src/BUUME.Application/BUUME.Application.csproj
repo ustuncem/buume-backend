@@ -23,4 +23,8 @@
       <ProjectReference Include="..\BUUME.Domain\BUUME.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Abstractions\Authentication\" />
+    </ItemGroup>
+
 </Project>
