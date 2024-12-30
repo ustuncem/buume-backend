@@ -24,4 +24,5 @@ RUN dotnet publish "./BUUME.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+ENV ASPNETCORE_HTTP_PORTS=5254,7232
 ENTRYPOINT ["dotnet", "BUUME.Api.dll"]
