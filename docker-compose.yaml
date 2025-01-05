@@ -1,0 +1,55 @@
+services:
+  buume.api:
+    image: ${DOCKER_REGISTRY-}buumeapi
+    container_name: BUUME.Api
+    build:
+      context: .
+      dockerfile: src/BUUME.Api/Dockerfile
+    depends_on:
+      - buume-db
+    ports:
+      - "8080:8080"      
+  buume-db:
+    image: postgres:latest
+    container_name: BUUME.Db
+    environment:
+      - POSTGRES_DB=BUUME
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_INITDB_ARGS="--locale=tr_TR.UTF-8"
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+  
+  buume-identity-db:
+    image: postgres:latest
+    container_name: BUUME.Identity.Db
+    environment:
+      - POSTGRES_DB=BUUME.Identity
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    expose:
+      - "5434"
+    ports:
+      - "5434:5434"
+    command: -p 5434
+      
+
+  buume-seq:
+    image: datalust/seq:latest
+    container_name: BUUME.Seq
+    environment:
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:5341
+      - 8082:80
+
+  buume-redis:
+    image: redis:latest
+    container_name: BUUME.Redis
+    restart: always
+    ports:
+      - '6379:6379'
