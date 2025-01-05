@@ -11,6 +11,8 @@ internal sealed class ValidatePhoneNumberCommandHandler(
     public async Task<Result<TokenResponse>> Handle(ValidatePhoneNumberCommand request, CancellationToken cancellationToken)
     {
         var response = await authenticationService.ValidateTokenAsync(request.PhoneNumber, request.Code);
+        
+        if (!response.IsSuccess) return Result.Failure<TokenResponse>(response.Error);
 
         return response;
     }

@@ -6,4 +6,6 @@ public static class AuthenticationErrorCodes
     public const string InvalidPhoneNumber = nameof(InvalidPhoneNumber);
     public const string InvalidCode = nameof(InvalidCode);
     public const string MissingCode = nameof(MissingCode);
+    public const string MissingAccessToken = nameof(MissingAccessToken);
+    public const string MissingRefreshToken = nameof(MissingRefreshToken);
 }

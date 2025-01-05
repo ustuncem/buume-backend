@@ -8,13 +8,17 @@ public static class AuthenticationErrors
         "Authentication.UserAlreadyExist", 
         $"User with {phoneNumber} already exists.");
     
-    public static Error UnknownError() => Error.Failure(
+    public static Error UnknownError = Error.Failure(
         "Authentication.UnknownError", 
         $"Unknown error occured.");
     
+    public static Error CantRequestNewToken = Error.Failure(
+        "Authentication.CantRequestNewToken", 
+        $"Cant request new token.");
+    
     public static Error NotFound(Guid userId) => Error.NotFound(
         "Authentication.NotFound",
-        $"The business category with the Id = '{userId}' was not found.");
+        $"The user with the Id = '{userId}' was not found.");
     
     public static Error UnableToUpdate(Guid userId) => Error.Failure(
         "Authentication.UnableToUpdate",
@@ -22,5 +26,9 @@ public static class AuthenticationErrors
     
     public static Error NotFound(string phoneNumber) => Error.NotFound(
         "Authentication.NotFound",
-        $"The business category with the Id = '{phoneNumber}' was not found");
+        $"The user with the phone number = '{phoneNumber}' was not found");
+    
+    public static Error WrongToken = Error.Failure(
+        "Authentication.WrongToken",
+        $"Wrong token entered.");
 }

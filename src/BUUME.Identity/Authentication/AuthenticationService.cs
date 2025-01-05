@@ -25,7 +25,7 @@ internal sealed class AuthenticationService(
         };
         
         var result = await userManager.CreateAsync(newUser);
-        if (!result.Succeeded) return Result.Failure<string>(AuthenticationErrors.UnknownError());
+        if (!result.Succeeded) return Result.Failure<string>(AuthenticationErrors.UnknownError);
         
         var phoneNumberValidationToken = await userManager.GenerateTwoFactorTokenAsync(newUser, TokenOptions.DefaultPhoneProvider);
         
@@ -39,8 +39,11 @@ internal sealed class AuthenticationService(
 
         var tokenValidationResponse = await userManager.VerifyTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider, token);
         
+        if(!tokenValidationResponse) return Result.Failure<TokenResponse>(AuthenticationErrors.WrongToken);
+        
         var authClaims = new List<Claim>
         {
+            new (ClaimTypes.Name, user.PhoneNumber),
             new (ClaimTypes.MobilePhone, user.PhoneNumber),
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
             new ("JWTID", Guid.NewGuid().ToString()),
@@ -55,9 +58,45 @@ internal sealed class AuthenticationService(
         
         var result = await userManager.UpdateAsync(user);
         
-        if (!result.Succeeded) return Result.Failure<TokenResponse>(AuthenticationErrors.UnknownError());
+        if (!result.Succeeded) return Result.Failure<TokenResponse>(AuthenticationErrors.UnknownError);
         
         var tokenResponse = TokenResponse.Create(accessToken, refreshToken, jwtOptions.Value.DurationInMinutes);
+        
+        await signInManager.SignInAsync(user, true);
+        
+        return tokenResponse;
+    }
+
+    public async Task<Result<TokenResponse>> RefreshAccessToken(string accessToken, string refreshToken)
+    {
+        var principal = jwtService.GetTokenPrincipal(accessToken);
+        var user = userManager.Users.SingleOrDefault(u => u.PhoneNumber == principal.Identity.Name);
+        
+        if (user == null) return Result.Failure<TokenResponse>(AuthenticationErrors.NotFound(""));
+
+        if (DateTime.UtcNow >= user.RefreshTokenExpiration || refreshToken != user.RefreshToken)
+            return Result.Failure<TokenResponse>(AuthenticationErrors.CantRequestNewToken);
+
+        var authClaims = new List<Claim>
+        {
+            new (ClaimTypes.Name, user.PhoneNumber),
+            new (ClaimTypes.MobilePhone, user.PhoneNumber),
+            new (ClaimTypes.NameIdentifier, user.Id.ToString()),
+            new ("JWTID", Guid.NewGuid().ToString()),
+            new ("UserName", user.UserName),
+        };
+        
+        var newAccessToken = jwtService.GenerateAccessToken(authClaims);
+        var newRefreshToken = jwtService.GenerateRefreshToken();
+        
+        user.RefreshToken = newRefreshToken;
+        user.RefreshTokenExpiration = DateTime.UtcNow.AddDays(jwtOptions.Value.RefreshTokenDurationInDays);
+        
+        var result = await userManager.UpdateAsync(user);
+        
+        if (!result.Succeeded) return Result.Failure<TokenResponse>(AuthenticationErrors.UnknownError);
+        
+        var tokenResponse = TokenResponse.Create(newAccessToken, newRefreshToken, jwtOptions.Value.DurationInMinutes);
         
         await signInManager.SignInAsync(user, true);
         

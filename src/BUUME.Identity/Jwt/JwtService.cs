@@ -34,9 +34,21 @@ internal sealed class JwtService(IOptions<JwtOptions> jwtOptions) : IJwtService
         rng.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-
-    public string GenerateAccessTokenFromRefreshToken(string refreshToken, string secret)
+    
+    public ClaimsPrincipal? GetTokenPrincipal(string token)
     {
-        throw new NotImplementedException();
+        var authSecret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Value.Key));
+
+        var validation = new TokenValidationParameters
+        {
+            IssuerSigningKey = authSecret,
+            LifetimeValidator = null,
+            ValidateLifetime = false,
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateActor = false
+        };
+
+        return new JwtSecurityTokenHandler().ValidateToken(token, validation, out _);
     }
 }

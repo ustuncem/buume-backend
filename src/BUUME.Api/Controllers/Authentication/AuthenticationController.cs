@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using BUUME.Application.Abstractions.Authentication;
+using BUUME.Application.Authentication.RefreshToken;
 using BUUME.Application.Authentication.Register;
 using BUUME.Application.Authentication.ValidatePhoneNumber;
 using BUUME.SharedKernel;
@@ -23,6 +24,7 @@ public class AuthenticationController(ISender sender) : ControllerBase
     {
         var command = new RegisterCommand(request.phoneNumber);
         var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);
     }
     
@@ -34,6 +36,19 @@ public class AuthenticationController(ISender sender) : ControllerBase
     {
         var command = new ValidatePhoneNumberCommand(request.phoneNumber, request.code);
         var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpPost("refresh")]
+    [ProducesResponseType(typeof(Result<TokenResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<TokenResponse>>> Refresh(
+        [FromBody] RefreshTokenRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new RefreshTokenCommand(request.accessToken, request.refreshToken);
+        var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);
     }
 }
