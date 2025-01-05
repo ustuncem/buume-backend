@@ -2,8 +2,8 @@ namespace BUUME.Domain.Users;
 
 public static class AgeCheckService
 {
-    private static readonly int MIN_VALID_AGE = 12;
-    
+    private const int MinValidAge = 12;
+
     public static bool IsValidAge(DateTime birthDate)
     {
         var today = DateTime.Today;
@@ -14,6 +14,6 @@ public static class AgeCheckService
             age--;
         }
 
-        return age >= MIN_VALID_AGE;
+        return age >= MinValidAge;
     }
 }

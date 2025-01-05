@@ -5,8 +5,8 @@ namespace BUUME.Domain.Users;
 
 public sealed class User : Entity
 {
-    private User(Guid id, Name name, Email email, PhoneNumber phoneNumber,
-        DateTime birthDate, Gender gender) : base(id)
+    private User(Guid id,  PhoneNumber phoneNumber, Name? name = null, Email? email = null,
+        DateTime? birthDate = null, Gender? gender = null) : base(id)
     {
         Name = name;
         Email = email;
@@ -16,23 +16,18 @@ public sealed class User : Entity
         Gender = gender;
     }
     
-    public Name Name { get; private set; }
-    public Email Email { get; private set; }
+    public Name? Name { get; private set; }
+    public Email? Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    public IsPhoneNumberVerified IsPhoneNumberVerified { get; private set; }
-    public DateTime BirthDate { get; private set; }
-    public Gender Gender { get; private set; }
+    public IsPhoneNumberVerified? IsPhoneNumberVerified { get; private set; }
+    public DateTime? BirthDate { get; private set; }
+    public Gender? Gender { get; private set; }
 
-    public static Result<User?> Create(Name name, Email email, PhoneNumber phoneNumber,
-        DateTime birthDate, Gender gender)
+    public static User Create(PhoneNumber phoneNumber, string validationToken)
     {
-        var isUserInValidAge = AgeCheckService.IsValidAge(birthDate);
-
-        if (!isUserInValidAge) return Result.Failure<User?>(UserErrors.NotInValidAge);
+        var user = new User(Guid.NewGuid(), phoneNumber);
         
-        var user = new User(Guid.NewGuid(), name, email, phoneNumber, birthDate, gender);
-        
-        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id));
+        user.RaiseDomainEvent(new UserCreatedDomainEvent(user.Id, validationToken));
 
         return user;
     }

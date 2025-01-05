@@ -1,0 +1,35 @@
+using BUUME.Domain.Users;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace BUUME.Infrastructure.Configurations;
+
+internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
+{
+    public void Configure(EntityTypeBuilder<User> builder)
+    {
+        builder.ToTable("users");
+        
+        builder.HasKey(x => x.Id);
+        builder.Property(x => x.Name).HasMaxLength(500)
+            .HasConversion(name => name != null ? name.Value : "", value => new Name(value));
+
+        builder.Property(x => x.Email).HasMaxLength(500)
+            .HasConversion(email => email != null ? email.Value : "", value => new Email(value));
+        
+        builder.Property(x => x.PhoneNumber).HasMaxLength(500)
+            .HasConversion(phoneNumber => phoneNumber.Value, value => new PhoneNumber(value))
+            .IsRequired();
+
+        builder.Property(x => x.IsPhoneNumberVerified).
+            HasConversion(isPhoneNumberVerified => isPhoneNumberVerified != null && isPhoneNumberVerified.Value, 
+                value => new IsPhoneNumberVerified(value))
+            .HasDefaultValue(new IsPhoneNumberVerified(false));
+
+        builder.Property(x => x.Gender).HasConversion<int>();
+        
+        builder.HasIndex(x => x.PhoneNumber).IsUnique();
+        
+        builder.HasQueryFilter(t => t.DeletedAt == null);
+    }
+}

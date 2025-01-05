@@ -1,5 +1,6 @@
 using BUUME.Application.Abstractions.Caching;
 using BUUME.Application.Abstractions.Data;
+using BUUME.Application.Abstractions.SMS;
 using BUUME.Domain.BusinessCategories;
 using BUUME.Domain.CampaignTypes;
 using BUUME.Domain.Cities;
@@ -7,9 +8,11 @@ using BUUME.Domain.Countries;
 using BUUME.Domain.Districts;
 using BUUME.Domain.Regions;
 using BUUME.Domain.TaxOffices;
+using BUUME.Domain.Users;
 using BUUME.Infrastructure.Caching;
 using BUUME.Infrastructure.Outbox;
 using BUUME.Infrastructure.Repositories;
+using BUUME.Infrastructure.SMS;
 using BUUME.Infrastructure.Time;
 using BUUME.SharedKernel;
 using Dapper;
@@ -17,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Npgsql;
 using Quartz;
 
@@ -27,16 +31,23 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         return services
-            .AddServices()
+            .AddServices(configuration)
             .AddDatabase(configuration)
             .AddBackgroundJobs(configuration)
             .AddCaching(configuration)
             .AddHealthChecks(configuration);
     }
     
-    private static IServiceCollection AddServices(this IServiceCollection services)
+    private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.Configure<SmsOptions>(configuration.GetSection("SmsSettings"));
+        
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddHttpClient<ISmsService, SmsService>((serviceProvider, httpClient) =>
+        {
+            SmsOptions smsOptions = serviceProvider.GetRequiredService<IOptions<SmsOptions>>().Value;
+            httpClient.BaseAddress = new Uri(smsOptions.Url);
+        });
 
         return services;
     }
@@ -66,6 +77,7 @@ public static class DependencyInjection
         services.AddScoped<IRegionRepository, RegionRepository>();
         services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped<IDistrictRepository, DistrictRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }

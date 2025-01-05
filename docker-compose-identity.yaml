@@ -1,0 +1,25 @@
+services:
+  buume.identity:
+    image: ${DOCKER_REGISTRY-}buumeidentity
+    container_name: BUUME.Identity
+    build:
+      context: .
+      dockerfile: src/BUUME.Identity/Dockerfile
+    depends_on:
+      - buume-identity-db
+    environment:
+      - ASPNETCORE_HTTP_PORTS=5254
+    ports:
+      - "5254:5254"
+  
+  buume-identity-db:
+    image: postgres:latest
+    container_name: BUUME.Identity.Db
+    environment:
+      - POSTGRES_DB=BUUME.Identity
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/database:/var/lib/postgresql/data
+    ports:
+      - "5434:5434"

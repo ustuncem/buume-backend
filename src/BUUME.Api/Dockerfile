@@ -12,6 +12,7 @@ COPY ["src/BUUME.BUUME/BUUME.Application.csproj", "src/BUUME.Application/"]
 COPY ["src/BUUME.Domain/BUUME.Domain.csproj", "src/BUUME.Domain/"]
 COPY ["src/BUUME.Infrastructure/BUUME.Infrastructure.csproj", "src/BUUME.Infrastructure/"]
 COPY ["src/BUUME.SharedKernel/BUUME.SharedKernel.csproj", "src/BUUME.SharedKernel/"]
+COPY ["src/BUUME.Identity/BUUME.Identity.csproj", "src/BUUME.Identity/"]
 RUN dotnet restore "./src/BUUME.Api/./BUUME.Api.csproj"
 COPY . .
 WORKDIR "/src/src/BUUME.Api"

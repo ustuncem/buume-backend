@@ -3,6 +3,7 @@ using Asp.Versioning;
 using Asp.Versioning.Builder;
 using BUUME.Api.Extensions;
 using BUUME.Application;
+using BUUME.Identity;
 using BUUME.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -16,7 +17,8 @@ builder.Host.UseSerilog((context, loggerConfig) =>
 builder.Services
     .AddApplication()
     .AddPresentation()
-    .AddInfrastructure(builder.Configuration);
+    .AddInfrastructure(builder.Configuration)
+    .AddBuumeIdentity(builder.Configuration);
 
 
 builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());

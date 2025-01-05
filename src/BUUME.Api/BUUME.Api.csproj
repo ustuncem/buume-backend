@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BUUME.Application\BUUME.Application.csproj" />
+      <ProjectReference Include="..\BUUME.Identity\BUUME.Identity.csproj" />
       <ProjectReference Include="..\BUUME.Infrastructure\BUUME.Infrastructure.csproj" />
     </ItemGroup>
 
