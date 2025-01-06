@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using BUUME.Application.Users.Me;
+using BUUME.Application.Users.UpdateMe;
 using BUUME.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -15,13 +16,24 @@ public class UsersController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
     
-    [HttpPost("me")]
-    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<Result<Guid>>> Me(
+    [HttpGet("me")]
+    [ProducesResponseType(typeof(Result<UserResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<UserResponse>>> Me(
         CancellationToken cancellationToken = default)
     {
         var query = new MeQuery();
         var result = await _sender.Send(query, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpPut("updateMe")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<UserResponse>>> UpdateMe(
+        [FromBody] UpdateMeCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _sender.Send(command, cancellationToken);
         if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);
     }

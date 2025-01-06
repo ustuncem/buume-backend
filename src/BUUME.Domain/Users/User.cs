@@ -34,7 +34,7 @@ public sealed class User : Entity
         return user;
     }
 
-    public Result Update(Name firstName, Name lastName, Email email, PhoneNumber phoneNumber, DateTime birthDate, Gender gender)
+    public Result Update(Name? firstName, Name? lastName, Email? email, PhoneNumber phoneNumber, DateTime? birthDate, Gender? gender)
     {
         var isUserInValidAge = AgeCheckService.IsValidAge(birthDate);
 

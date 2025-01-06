@@ -24,14 +24,14 @@ services:
       RESHARPER_LOG_CONF: "/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
     image: "buumeapi:dev"
     ports:
-    - "127.0.0.1:57013:57000"
-    - "127.0.0.1:57213:57200"
-    - "127.0.0.1:57413:57400"
+    - "127.0.0.1:57016:57000"
+    - "127.0.0.1:57216:57200"
+    - "127.0.0.1:57416:57400"
     volumes:
     - "/Users/logo/RiderProjects/BUUME/src/BUUME.Api:/app:rw"
     - "/Users/logo/RiderProjects/BUUME:/src:rw"
     - "/Users/logo/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/logo/.local/share/JetBrains/RiderRemoteDebugger/2024.3/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
     - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/Users/logo/Library/Logs/JetBrains/Rider2024.3/DebuggerWorker/JetBrains.Debugger.Worker.2025_1_06_23_40_42:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/Users/logo/Library/Logs/JetBrains/Rider2024.3/DebuggerWorker/JetBrains.Debugger.Worker.2025_1_07_01_12_39:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"

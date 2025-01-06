@@ -4,12 +4,14 @@ public static class AgeCheckService
 {
     private const int MinValidAge = 12;
 
-    public static bool IsValidAge(DateTime birthDate)
+    public static bool IsValidAge(DateTime? birthDate)
     {
+        if (!birthDate.HasValue) return true;
+        
         var today = DateTime.Today;
-        int age = today.Year - birthDate.Year;
+        int age = today.Year - birthDate.Value.Year;
 
-        if (birthDate.Date > today.AddYears(-age)) 
+        if (birthDate.Value.Date > today.AddYears(-age)) 
         {
             age--;
         }
