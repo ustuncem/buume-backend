@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using BUUME.Application.Abstractions.Authentication;
+using BUUME.Application.Authentication.Login;
 using BUUME.Application.Authentication.RefreshToken;
 using BUUME.Application.Authentication.Register;
 using BUUME.Application.Authentication.ValidatePhoneNumber;
@@ -23,6 +24,18 @@ public class AuthenticationController(ISender sender) : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var command = new RegisterCommand(request.phoneNumber);
+        var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpPost("login")]
+    [ProducesResponseType(typeof(Result), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<Guid>>> Login(
+        [FromBody] LoginRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new LoginCommand(request.phoneNumber);
         var result = await _sender.Send(command, cancellationToken);
         if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);

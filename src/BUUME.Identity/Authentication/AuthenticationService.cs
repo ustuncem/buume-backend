@@ -32,6 +32,17 @@ internal sealed class AuthenticationService(
         return phoneNumberValidationToken;
     }
 
+    public async Task<Result<string>> LoginAsync(string phoneNumber)
+    {
+        var user = userManager.Users.SingleOrDefault(u => u.PhoneNumber == phoneNumber);
+        if (user == null) return Result.Failure<string>(AuthenticationErrors.NotFound(phoneNumber));
+
+        var phoneNumberValidationToken =
+            await userManager.GenerateTwoFactorTokenAsync(user, TokenOptions.DefaultPhoneProvider);
+        
+        return phoneNumberValidationToken;
+    }
+
     public async Task<Result<TokenResponse>> ValidateTokenAsync(string phoneNumber, string token)
     {
         var user = userManager.Users.SingleOrDefault(u => u.PhoneNumber == phoneNumber);

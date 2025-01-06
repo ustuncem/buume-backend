@@ -51,6 +51,11 @@ public sealed class User : Entity
 
         return Result.Success();
     }
+
+    public void UpdatePhoneNumberValidState(bool isPhoneNumberVerified)
+    {
+        IsPhoneNumberVerified = new IsPhoneNumberVerified(isPhoneNumberVerified);
+    }
     
     public void ValidatePhoneNumber()
     {

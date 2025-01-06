@@ -1,6 +1,7 @@
 using System.Data;
 using BUUME.Application.Abstractions.Data;
 using BUUME.Application.Exceptions;
+using BUUME.Domain.Users;
 using BUUME.Infrastructure.Outbox;
 using BUUME.SharedKernel;
 using Microsoft.EntityFrameworkCore;
@@ -9,16 +10,15 @@ using Newtonsoft.Json;
 
 namespace BUUME.Infrastructure;
 
-public sealed class ApplicationDbContext : DbContext, IUnitOfWork
+public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : DbContext(options), IUnitOfWork
 {
+    public DbSet<User> Users { get; private set; }
+    
     private static readonly JsonSerializerSettings JsonSerializerSettings = new()
     {
         TypeNameHandling = TypeNameHandling.All
     };
-    
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-    {
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
