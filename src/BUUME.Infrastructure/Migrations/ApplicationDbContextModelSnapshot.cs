@@ -332,6 +332,11 @@ namespace BUUME.Infrastructure.Migrations
                         .HasColumnType("character varying(500)")
                         .HasColumnName("email");
 
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("first_name");
+
                     b.Property<int?>("Gender")
                         .HasColumnType("integer")
                         .HasColumnName("gender");
@@ -342,10 +347,10 @@ namespace BUUME.Infrastructure.Migrations
                         .HasDefaultValue(false)
                         .HasColumnName("is_phone_number_verified");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("LastName")
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
-                        .HasColumnName("name");
+                        .HasColumnName("last_name");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()

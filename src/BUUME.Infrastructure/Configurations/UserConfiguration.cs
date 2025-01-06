@@ -11,7 +11,10 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.ToTable("users");
         
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Name).HasMaxLength(500)
+        builder.Property(x => x.FirstName).HasMaxLength(500)
+            .HasConversion(name => name != null ? name.Value : "", value => new Name(value));
+        
+        builder.Property(x => x.LastName).HasMaxLength(500)
             .HasConversion(name => name != null ? name.Value : "", value => new Name(value));
 
         builder.Property(x => x.Email).HasMaxLength(500)

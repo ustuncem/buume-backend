@@ -5,10 +5,11 @@ namespace BUUME.Domain.Users;
 
 public sealed class User : Entity
 {
-    private User(Guid id,  PhoneNumber phoneNumber, Name? name = null, Email? email = null,
+    private User(Guid id,  PhoneNumber phoneNumber, Name? firstName = null, Name? lastName = null, Email? email = null,
         DateTime? birthDate = null, Gender? gender = null) : base(id)
     {
-        Name = name;
+        FirstName = FirstName;
+        LastName = LastName;
         Email = email;
         PhoneNumber = phoneNumber;
         IsPhoneNumberVerified = new IsPhoneNumberVerified(false);
@@ -16,7 +17,8 @@ public sealed class User : Entity
         Gender = gender;
     }
     
-    public Name? Name { get; private set; }
+    public Name? FirstName { get; private set; }
+    public Name? LastName { get; private set; }
     public Email? Email { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
     public IsPhoneNumberVerified? IsPhoneNumberVerified { get; private set; }
@@ -32,13 +34,14 @@ public sealed class User : Entity
         return user;
     }
 
-    public Result Update(Name name, Email email, PhoneNumber phoneNumber, DateTime birthDate, Gender gender)
+    public Result Update(Name firstName, Name lastName, Email email, PhoneNumber phoneNumber, DateTime birthDate, Gender gender)
     {
         var isUserInValidAge = AgeCheckService.IsValidAge(birthDate);
 
         if (!isUserInValidAge) return Result.Failure(UserErrors.NotInValidAge);
         
-        Name = name;
+        FirstName = firstName;
+        LastName = lastName;
         Email = email;
         PhoneNumber = phoneNumber;
         BirthDate = birthDate;
