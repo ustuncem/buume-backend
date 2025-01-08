@@ -1,15 +1,18 @@
 using BUUME.Application.Abstractions.Caching;
 using BUUME.Application.Abstractions.Data;
+using BUUME.Application.Abstractions.Files;
 using BUUME.Application.Abstractions.SMS;
 using BUUME.Domain.BusinessCategories;
 using BUUME.Domain.CampaignTypes;
 using BUUME.Domain.Cities;
 using BUUME.Domain.Countries;
 using BUUME.Domain.Districts;
+using BUUME.Domain.Files;
 using BUUME.Domain.Regions;
 using BUUME.Domain.TaxOffices;
 using BUUME.Domain.Users;
 using BUUME.Infrastructure.Caching;
+using BUUME.Infrastructure.Files;
 using BUUME.Infrastructure.Outbox;
 using BUUME.Infrastructure.Repositories;
 using BUUME.Infrastructure.SMS;
@@ -23,6 +26,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Npgsql;
 using Quartz;
+using FileOptions = BUUME.Infrastructure.Files.FileOptions;
 
 namespace BUUME.Infrastructure;
 
@@ -41,6 +45,7 @@ public static class DependencyInjection
     private static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<SmsOptions>(configuration.GetSection("SmsSettings"));
+        services.Configure<FileOptions>(configuration.GetSection("FileUploadSettings"));
         
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddHttpClient<ISmsService, SmsService>((serviceProvider, httpClient) =>
@@ -48,6 +53,7 @@ public static class DependencyInjection
             SmsOptions smsOptions = serviceProvider.GetRequiredService<IOptions<SmsOptions>>().Value;
             httpClient.BaseAddress = new Uri(smsOptions.Url);
         });
+        services.AddScoped<IFileUploader, FileUploader>();
 
         return services;
     }
@@ -78,6 +84,7 @@ public static class DependencyInjection
         services.AddScoped<ICityRepository, CityRepository>();
         services.AddScoped<IDistrictRepository, DistrictRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
 
         return services;
     }

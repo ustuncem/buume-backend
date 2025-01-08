@@ -1,6 +1,7 @@
 using BUUME.Domain.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using File = BUUME.Domain.Files.File;
 
 namespace BUUME.Infrastructure.Configurations;
 
@@ -28,6 +29,8 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             HasConversion(isPhoneNumberVerified => isPhoneNumberVerified != null && isPhoneNumberVerified.Value, 
                 value => new IsPhoneNumberVerified(value))
             .HasDefaultValue(new IsPhoneNumberVerified(false));
+        
+        builder.HasOne<File>().WithMany().HasForeignKey(city => city.ProfilePhotoId).OnDelete(DeleteBehavior.SetNull);
 
         builder.Property(x => x.Gender).HasConversion<int>();
         

@@ -15,22 +15,25 @@ internal sealed class SmsService(
     {
         var requestPayload = new
         {
-            authentication = new
+            request = new
             {
-                key = smsOptions.Value.Key,
-                hash = smsOptions.Value.Hash
-            },
-            order = new
-            {
-                sender = smsOptions.Value.SenderId,
-                iys = smsOptions.Value.Iys,
-                iysList = smsOptions.Value.IysList,
-                message = new
+                authentication = new
                 {
-                    text = message,
-                    receipents = new
+                    key = smsOptions.Value.Key,
+                    hash = smsOptions.Value.Hash
+                },
+                order = new
+                {
+                    sender = smsOptions.Value.SenderId,
+                    iys = smsOptions.Value.Iys,
+                    iysList = smsOptions.Value.IysList,
+                    message = new
                     {
-                        number = new[] { phoneNumber }
+                        text = message,
+                        receipents = new
+                        {
+                            number = new[] { phoneNumber }
+                        }
                     }
                 }
             }

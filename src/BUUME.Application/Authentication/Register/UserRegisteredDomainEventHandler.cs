@@ -11,12 +11,11 @@ internal sealed class UserRegisteredDomainEventHandler(ISmsService smsService, I
 
     public async Task Handle(UserCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        // var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken);
-        await userRepository.GetByIdAsync(notification.UserId, cancellationToken);
-        //if (user == null) { return; }
+         var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken);
+        if (user == null) { return; }
         
-        // var validationToken = notification.ValidationToken;
+         var validationToken = notification.ValidationToken;
         
-        // await smsService.SendAsync(user.PhoneNumber.Value, validationToken, cancellationToken);
+         await smsService.SendAsync(user.PhoneNumber.Value, $"Doğrulama kodu: {validationToken}", cancellationToken);
     }
 }

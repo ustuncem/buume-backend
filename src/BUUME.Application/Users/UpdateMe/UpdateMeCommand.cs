@@ -8,4 +8,5 @@ public record UpdateMeCommand(
     string? Email,
     string PhoneNumber,
     string? BirthDate,
-    int? Gender) : ICommand<bool>;
+    int? Gender,
+    string? ProfilePhoto = null) : ICommand<bool>;

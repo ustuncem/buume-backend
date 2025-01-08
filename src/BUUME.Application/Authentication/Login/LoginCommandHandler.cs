@@ -16,7 +16,7 @@ internal sealed class LoginCommandHandler(
         var response = await authenticationService.LoginAsync(request.PhoneNumber);
         if (!response.IsSuccess) return response;
         
-        // send sms here!
+        await smsService.SendAsync(request.PhoneNumber, $"Doğrulama kodu: {response.Value}", cancellationToken);
         
         return "true";
     }

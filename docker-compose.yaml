@@ -2,11 +2,15 @@ services:
   buume.api:
     image: ${DOCKER_REGISTRY-}buumeapi
     container_name: BUUME.Api
+    volumes:
+      - ./uploads:/app/uploads
     build:
       context: .
       dockerfile: src/BUUME.Api/Dockerfile
     depends_on:
       - buume-db
+    command: >
+      sh -c "chmod -R 777 /app/uploads && exec \"$0\" \"$@\""
     ports:
       - "8080:8080"      
   buume-db:

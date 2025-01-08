@@ -24,6 +24,8 @@ public sealed class User : Entity
     public IsPhoneNumberVerified? IsPhoneNumberVerified { get; private set; }
     public DateTime? BirthDate { get; private set; }
     public Gender? Gender { get; private set; }
+    
+    public Guid? ProfilePhotoId { get; private set; }
 
     public static User Create(PhoneNumber phoneNumber, string validationToken)
     {
@@ -34,7 +36,14 @@ public sealed class User : Entity
         return user;
     }
 
-    public Result Update(Name? firstName, Name? lastName, Email? email, PhoneNumber phoneNumber, DateTime? birthDate, Gender? gender)
+    public Result Update(
+        Name? firstName, 
+        Name? lastName, 
+        Email? email, 
+        PhoneNumber phoneNumber, 
+        DateTime? birthDate, 
+        Gender? gender, 
+        Guid? profilePhotoId = null)
     {
         var isUserInValidAge = AgeCheckService.IsValidAge(birthDate);
 
@@ -46,6 +55,7 @@ public sealed class User : Entity
         PhoneNumber = phoneNumber;
         BirthDate = birthDate;
         Gender = gender;
+        ProfilePhotoId = profilePhotoId;
         UpdatedAt = DateTime.UtcNow;
         
         if(phoneNumber != PhoneNumber) IsPhoneNumberVerified = new IsPhoneNumberVerified(false);

@@ -1,3 +1,3 @@
 namespace BUUME.Domain.Files;
 
-public record Size(long Value);
+public record Size(double Value);
