@@ -2,11 +2,20 @@ using BUUME.SharedKernel.Events;
 
 namespace BUUME.SharedKernel;
 
-public abstract class Entity(Guid id)
+public abstract class Entity
 {
+    protected Entity(Guid id)
+    {
+        Id = id;
+    }
+    
+    protected Entity()
+    {
+        
+    }
     private readonly List<IDomainEvent> _domainEvents = new();
 
-    public Guid Id { get; init; } = id;
+    public Guid Id { get; init; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }

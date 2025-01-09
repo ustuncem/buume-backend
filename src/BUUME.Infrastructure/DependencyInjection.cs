@@ -3,6 +3,7 @@ using BUUME.Application.Abstractions.Data;
 using BUUME.Application.Abstractions.Files;
 using BUUME.Application.Abstractions.SMS;
 using BUUME.Domain.BusinessCategories;
+using BUUME.Domain.Businesses;
 using BUUME.Domain.CampaignTypes;
 using BUUME.Domain.Cities;
 using BUUME.Domain.Countries;
@@ -85,6 +86,7 @@ public static class DependencyInjection
         services.AddScoped<IDistrictRepository, DistrictRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFileRepository, FileRepository>();
+        services.AddScoped<IBusinessRepository, BusinessRepository>();
 
         return services;
     }

@@ -4,5 +4,5 @@ namespace BUUME.Domain.Businesses;
 
 public interface IBusinessRepository : IRepository<Business>
 {
-    Task<IReadOnlyList<Business>> GetAllAsync(CancellationToken cancellationToken);
+    Task<Business?> GetByOwnerIdAsync(Guid ownerId, CancellationToken cancellationToken = default);
 }

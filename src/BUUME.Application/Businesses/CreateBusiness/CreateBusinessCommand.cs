@@ -1,0 +1,28 @@
+using BUUME.Application.Abstractions.Messaging;
+
+namespace BUUME.Application.Businesses.CreateBusiness;
+
+public record CreateBusinessCommand(
+    Guid CountryId,
+    Guid CityId,
+    Guid DistrictId,
+    Guid TaxOfficeId,
+    string Logo,
+    string Name, 
+    string Email, 
+    string PhoneNumber,
+    string Address,
+    decimal Latitude, 
+    decimal Longitude,
+    string TradeName, 
+    string Vkn,
+    bool IsKvkkApproved,
+    string? StartTime,
+    string? EndTime,
+    string? Description = null, 
+    string? OnlineOrderLink = null, 
+    string? MenuLink = null, 
+    string? WebsiteLink = null,
+    Guid[]? BusinessCategoryIds = null,
+    string[]? BusinessPhotos = null        
+    ) : ICommand<Guid>;

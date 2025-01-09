@@ -3,6 +3,7 @@ using System;
 using BUUME.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BUUME.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250109004622_BusinessEntity")]
+    partial class BusinessEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -710,9 +713,8 @@ namespace BUUME.Infrastructure.Migrations
                                 .HasColumnType("character varying(500)")
                                 .HasColumnName("tax_info_trade_name");
 
-                            b1.Property<string>("Vkn")
-                                .IsRequired()
-                                .HasColumnType("text")
+                            b1.Property<int>("Vkn")
+                                .HasColumnType("integer")
                                 .HasColumnName("tax_info_vkn");
 
                             b1.HasKey("BusinessId");
