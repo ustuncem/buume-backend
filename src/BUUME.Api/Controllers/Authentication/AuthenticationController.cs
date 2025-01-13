@@ -1,11 +1,13 @@
 using Asp.Versioning;
 using BUUME.Application.Abstractions.Authentication;
 using BUUME.Application.Authentication.Login;
+using BUUME.Application.Authentication.Logout;
 using BUUME.Application.Authentication.RefreshToken;
 using BUUME.Application.Authentication.Register;
 using BUUME.Application.Authentication.ValidatePhoneNumber;
 using BUUME.SharedKernel;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BUUME.Api.Controllers.Authentication;
@@ -60,6 +62,18 @@ public class AuthenticationController(ISender sender) : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var command = new RefreshTokenCommand(request.accessToken, request.refreshToken);
+        var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [Authorize]
+    [HttpPost("logout")]
+    [ProducesResponseType(typeof(Result<TokenResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<TokenResponse>>> Logout(
+        CancellationToken cancellationToken = default)
+    {
+        var command = new LogoutCommand();
         var result = await _sender.Send(command, cancellationToken);
         if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);

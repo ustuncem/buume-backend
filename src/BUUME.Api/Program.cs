@@ -7,6 +7,7 @@ using BUUME.Identity;
 using BUUME.Infrastructure;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.Extensions.FileProviders;
 using Serilog;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -44,6 +45,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+    RequestPath = "/uploads"
+});
+
 
 app.MapHealthChecks("health", new HealthCheckOptions
 {

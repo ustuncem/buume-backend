@@ -6,7 +6,6 @@ public record UpdateMeCommand(
     string? FirstName, 
     string? LastName,
     string? Email,
-    string PhoneNumber,
     string? BirthDate,
     int? Gender,
     string? ProfilePhoto = null) : ICommand<bool>;

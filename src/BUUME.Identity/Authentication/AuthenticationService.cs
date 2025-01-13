@@ -113,4 +113,24 @@ internal sealed class AuthenticationService(
         
         return tokenResponse;
     }
+
+    public async Task<Result<bool>> LogoutAsync(string phoneNumber)
+    {
+        var user = userManager.Users.SingleOrDefault(u => u.PhoneNumber == phoneNumber);
+        if (user == null) return Result.Failure<bool>(AuthenticationErrors.NotFound(phoneNumber));
+        
+        await signInManager.SignOutAsync();
+        return true;
+    }
+
+    public async Task<Result<bool>> DeleteAccountAsync(string phoneNumber)
+    {
+        var user = userManager.Users.SingleOrDefault(u => u.PhoneNumber == phoneNumber);
+        if (user == null) return Result.Failure<bool>(AuthenticationErrors.NotFound(phoneNumber));
+        
+        var result = await userManager.DeleteAsync(user);
+        if (!result.Succeeded) return Result.Failure<bool>(AuthenticationErrors.UnknownError);
+        
+        return true;
+    }
 }

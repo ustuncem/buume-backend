@@ -8,4 +8,6 @@ public interface IAuthenticationService
     Task<Result<string>> LoginAsync(string phoneNumber);
     Task<Result<TokenResponse>> ValidateTokenAsync(string phoneNumber, string token);
     Task<Result<TokenResponse>> RefreshAccessToken(string accessToken, string refreshToken);
+    Task<Result<bool>> LogoutAsync(string phoneNumber);
+    Task<Result<bool>> DeleteAccountAsync(string phoneNumber);
 }

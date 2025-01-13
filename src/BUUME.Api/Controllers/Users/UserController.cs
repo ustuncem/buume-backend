@@ -1,4 +1,7 @@
 using Asp.Versioning;
+using BUUME.Application.Users.DeleteMe;
+using BUUME.Application.Users.GetMeHeader;
+using BUUME.Application.Users.HasBusiness;
 using BUUME.Application.Users.Me;
 using BUUME.Application.Users.UpdateMe;
 using BUUME.SharedKernel;
@@ -27,6 +30,17 @@ public class UsersController(ISender sender) : ControllerBase
         return Ok(result);
     }
     
+    [HttpGet("meHeader")]
+    [ProducesResponseType(typeof(Result<MeHeaderResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<MeHeaderResponse>>> MeHeader(
+        CancellationToken cancellationToken = default)
+    {
+        var query = new GetMeHeaderQuery();
+        var result = await _sender.Send(query, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
     [HttpPut("updateMe")]
     [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
     public async Task<ActionResult<Result<UserResponse>>> UpdateMe(
@@ -34,6 +48,28 @@ public class UsersController(ISender sender) : ControllerBase
         CancellationToken cancellationToken = default)
     {
         var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpDelete("deleteMe")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<UserResponse>>> DeleteMe(
+        CancellationToken cancellationToken = default)
+    {
+        var command = new DeleteMeCommand();
+        var result = await _sender.Send(command, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpGet("hasBusiness")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<bool>>> HasBusiness(
+        CancellationToken cancellationToken = default)
+    {
+        var query = new HasBusinessQuery();
+        var result = await _sender.Send(query, cancellationToken);
         if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);
     }

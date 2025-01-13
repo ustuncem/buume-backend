@@ -6,4 +6,5 @@ public interface IRepository<T> where T : Entity
     void Add(T entity);
     void Update(T entity);
     void Delete(T entity);
+    void HardDelete(T entity);
 }

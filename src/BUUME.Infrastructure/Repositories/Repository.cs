@@ -25,4 +25,9 @@ internal abstract class Repository<T>(ApplicationDbContext dbContext) : IReposit
     {
         DbContext.Set<T>().Update(entity);
     }
+
+    public void HardDelete(T entity)
+    {
+        DbContext.Set<T>().Remove(entity);
+    }
 }

@@ -46,9 +46,10 @@ internal sealed class UpdateMeCommandHandler(
         var email = new Email(request.Email ?? "");
         var birthDate = BirthDateConverter.Convert(request.BirthDate ?? "");
         var gender = request.Gender.HasValue ? (Gender)request.Gender.Value : (Gender?)null;
+        var newFileId = fileId ?? user.ProfilePhotoId;
         
         // TODO: Implement phone number change here.
-        var updateResult = user.Update(firstName, lastName, email, user.PhoneNumber, birthDate, gender, fileId);
+        var updateResult = user.Update(firstName, lastName, email, user.PhoneNumber, birthDate, gender, newFileId);
         
         if (!updateResult.IsSuccess) return Result.Failure<bool>(updateResult.Error);
         

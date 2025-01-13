@@ -35,12 +35,10 @@ internal sealed class CreateBusinessCommandValidator : AbstractValidator<CreateB
         RuleFor(x => x.Email)
             .EmailAddress()
             .WithErrorCode(BusinessErrorCodes.InvalidEmail);
-        
+
         RuleFor(x => x.PhoneNumber)
             .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingPhone)
-            .Matches(@"^(?:\+90|0)?5\d{9}$")
-            .WithErrorCode(BusinessErrorCodes.InvalidPhone);
+            .WithErrorCode(BusinessErrorCodes.MissingPhone);
 
         RuleFor(x => x.Address)
             .NotEmpty()

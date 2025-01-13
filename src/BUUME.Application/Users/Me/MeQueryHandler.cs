@@ -23,8 +23,10 @@ internal sealed class MeQueryHandler(IUserContext userContext, IDbConnectionFact
                 u.phone_number AS PhoneNumber,
                 u.is_phone_number_verified AS IsPhoneNumberVerified,
                 u.birth_date AS BirthDate,
-                u.gender AS Gender
+                u.gender AS Gender,
+                f.path AS ProfilePicture
             FROM users u
+            LEFT JOIN files f ON u.profile_photo_id = f.id
             WHERE u.phone_number = @PhoneNumber;
             """;
 

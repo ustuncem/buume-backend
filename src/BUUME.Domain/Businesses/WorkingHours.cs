@@ -13,11 +13,6 @@ public record WorkingHours
 
     public static WorkingHours Create(TimeSpan startTime, TimeSpan endTime)
     {
-        if (startTime >= endTime)
-        {
-            throw new ArgumentException("Start time must be earlier than end time.");
-        }
-
         return new WorkingHours(startTime, endTime);
     }
 }

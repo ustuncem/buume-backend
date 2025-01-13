@@ -33,5 +33,5 @@ services:
     - "/Users/logo/.nuget/packages:/home/app/.nuget/packages"
     - "/Users/logo/.local/share/JetBrains/RiderRemoteDebugger/2024.3/LinuxArm64:/opt/JetBrains/RiderDebuggerTools"
     - "/Applications/Rider.app/Contents/bin/backend-log.xml:/etc/opt/JetBrains/RiderDebuggerTools/backend-log.xml"
-    - "/Users/logo/Library/Logs/JetBrains/Rider2024.3/DebuggerWorker/JetBrains.Debugger.Worker.2025_1_10_01_51_19:/var/opt/JetBrains/RiderDebuggerTools:rw"
+    - "/Users/logo/Library/Logs/JetBrains/Rider2024.3/DebuggerWorker/JetBrains.Debugger.Worker.2025_1_13_16_35_32:/var/opt/JetBrains/RiderDebuggerTools:rw"
     working_dir: "/app"

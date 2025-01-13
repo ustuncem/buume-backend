@@ -18,12 +18,6 @@ internal sealed class UpdateMeCommandValidator : AbstractValidator<UpdateMeComma
 
         RuleFor(x => x.Email)
             .EmailAddress().WithErrorCode(UserErrorCodes.UpdateMe.InvalidEmail);
-        
-        RuleFor(x => x.PhoneNumber)
-            .NotEmpty()
-            .WithErrorCode(UserErrorCodes.UpdateMe.MissingPhoneNumber)
-            .Matches(@"^(?:\+90|0)?5\d{9}$")
-            .WithErrorCode(UserErrorCodes.UpdateMe.InvalidPhoneNumber);
 
         RuleFor(person => person.BirthDate)
             .Must(BeAValidBirthDate).WithErrorCode(UserErrorCodes.UpdateMe.InvalidBirthDate);
