@@ -13,13 +13,16 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         
         builder.HasKey(x => x.Id);
         builder.Property(x => x.FirstName).HasMaxLength(500)
-            .HasConversion(name => name != null ? name.Value : "", value => new Name(value));
+            .HasConversion(firstName => firstName.Value, value => new FirstName(value));
         
         builder.Property(x => x.LastName).HasMaxLength(500)
-            .HasConversion(name => name != null ? name.Value : "", value => new Name(value));
+            .HasConversion(lastName => lastName.Value, value => new LastName(value));
 
         builder.Property(x => x.Email).HasMaxLength(500)
             .HasConversion(email => email != null ? email.Value : "", value => new Email(value));
+        
+        builder.Property(x => x.SwitchedToBusiness)
+            .HasConversion(switchedToBusiness => switchedToBusiness.Value , value => new SwitchedToBusiness(value));
         
         builder.Property(x => x.PhoneNumber).HasMaxLength(500)
             .HasConversion(phoneNumber => phoneNumber.Value, value => new PhoneNumber(value))

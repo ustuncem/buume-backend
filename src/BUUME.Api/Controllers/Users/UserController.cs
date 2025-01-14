@@ -2,7 +2,9 @@ using Asp.Versioning;
 using BUUME.Application.Users.DeleteMe;
 using BUUME.Application.Users.GetMeHeader;
 using BUUME.Application.Users.HasBusiness;
+using BUUME.Application.Users.HasUserSwitchedToBusiness;
 using BUUME.Application.Users.Me;
+using BUUME.Application.Users.ToggleBusinessSwitch;
 using BUUME.Application.Users.UpdateMe;
 using BUUME.SharedKernel;
 using MediatR;
@@ -70,6 +72,28 @@ public class UsersController(ISender sender) : ControllerBase
     {
         var query = new HasBusinessQuery();
         var result = await _sender.Send(query, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpGet("hasUserSwitchedToBusiness")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<bool>>> HasUserSwitchedToBusiness(
+        CancellationToken cancellationToken = default)
+    {
+        var query = new HasUserSwitchedToBusinessQuery();
+        var result = await _sender.Send(query, cancellationToken);
+        if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
+        return Ok(result);
+    }
+    
+    [HttpPut("toggleBusinessSwitch")]
+    [ProducesResponseType(typeof(Result<bool>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<Result<bool>>> ToggleBusinessSwitch(
+        CancellationToken cancellationToken = default)
+    {
+        var command = new ToggleBusinessSwitchCommand();
+        var result = await _sender.Send(command, cancellationToken);
         if (!result.IsSuccess) return BadRequest(new { IsSuccess = result.IsSuccess, Error = result.Error });
         return Ok(result);
     }

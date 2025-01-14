@@ -1,3 +1,4 @@
 namespace BUUME.Domain.CampaignTypes;
 
-public record Description(string Value);
+public record 
+    Description(string Value);

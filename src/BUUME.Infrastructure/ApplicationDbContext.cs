@@ -13,7 +13,7 @@ namespace BUUME.Infrastructure;
 public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
     : DbContext(options), IUnitOfWork
 {
-    public DbSet<User> Users { get; private set; }
+    public DbSet<User> Users { get; set; }
     
     private static readonly JsonSerializerSettings JsonSerializerSettings = new()
     {

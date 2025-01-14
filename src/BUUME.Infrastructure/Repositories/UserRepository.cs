@@ -8,6 +8,7 @@ internal sealed class UserRepository(ApplicationDbContext dbContext) :
 {
     public async Task<User?> GetByPhoneNumberAsync(string phoneNumber, CancellationToken cancellationToken = default)
     {
-        return await dbContext.Users.FirstOrDefaultAsync(user => user.PhoneNumber == new PhoneNumber(phoneNumber), cancellationToken);
+        return await DbContext.Set<User>()
+            .FirstOrDefaultAsync(user => user.PhoneNumber == new PhoneNumber(phoneNumber), cancellationToken);
     }
 }

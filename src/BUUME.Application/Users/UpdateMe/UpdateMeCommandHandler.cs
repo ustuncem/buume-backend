@@ -6,7 +6,6 @@ using BUUME.Domain.Files;
 using BUUME.Domain.Users;
 using BUUME.SharedKernel;
 using File = BUUME.Domain.Files.File;
-using Name = BUUME.Domain.Users.Name;
 
 namespace BUUME.Application.Users.UpdateMe;
 
@@ -41,8 +40,8 @@ internal sealed class UpdateMeCommandHandler(
         }
         
         
-        var firstName = new Name(request.FirstName ?? "");
-        var lastName = new Name(request.LastName ?? "");
+        var firstName = new FirstName(request.FirstName ?? "");
+        var lastName = new LastName(request.LastName ?? "");
         var email = new Email(request.Email ?? "");
         var birthDate = BirthDateConverter.Convert(request.BirthDate ?? "");
         var gender = request.Gender.HasValue ? (Gender)request.Gender.Value : (Gender?)null;

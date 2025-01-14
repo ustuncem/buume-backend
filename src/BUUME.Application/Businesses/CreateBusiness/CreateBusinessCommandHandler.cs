@@ -56,6 +56,8 @@ internal sealed class CreateBusinessCommandHandler(
         
         var business = Business.Create(logoId, ownerId, countryId, cityId, districtId, taxOfficeId, baseInfo, addressInfo, taxInfo, isKvkkApproved, workingHours);
         
+        user.ToggleBusinessSwitch();
+        userRepository.Update(user);
         businessRepository.Add(business);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         await HandleCategories(request.BusinessCategoryIds, business.Id);
