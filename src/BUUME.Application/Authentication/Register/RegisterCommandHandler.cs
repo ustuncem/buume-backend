@@ -3,12 +3,14 @@ using BUUME.Application.Abstractions.Data;
 using BUUME.Application.Abstractions.Messaging;
 using BUUME.Domain.Users;
 using BUUME.SharedKernel;
+using Microsoft.Extensions.Logging;
 
 namespace BUUME.Application.Authentication.Register;
 
 internal sealed class RegisterCommandHandler(
     IUserRepository userRepository,
     IAuthenticationService authenticationService,
+    ILogger<RegisterCommandHandler> logger,
     IUnitOfWork unitOfWork)
     : ICommandHandler<RegisterCommand, string>
 {
@@ -22,8 +24,19 @@ internal sealed class RegisterCommandHandler(
         var user = User.Create(phoneNumber, response.Value);
         
         userRepository.Add(user);
-        await unitOfWork.SaveChangesAsync(cancellationToken);
         
-        return "true";
+        try
+        {
+            await unitOfWork.SaveChangesAsync(cancellationToken);
+        
+            return "true";
+        }
+        catch (Exception e)
+        {
+            await authenticationService.DeleteAccountAsync(request.PhoneNumber);
+            logger.LogError(e, e.Message);
+            return Result.Failure<string>(UserErrors.UnknownError);
+        }
+        
     }
 }
