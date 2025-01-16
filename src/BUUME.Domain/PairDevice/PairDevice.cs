@@ -19,10 +19,10 @@ public sealed class PairDevice : Entity
     public OperatingSystem OperatingSystem { get; private set; }
     public IsActive IsActive { get; private set; }
 
-    public static PairDevice Create(DeviceName deviceName, FcmToken fcmToken, Guid userId, OperatingSystem operatingSystem, IsActive isActive)
+    public static PairDevice Create(DeviceName deviceName, FcmToken fcmToken, Guid userId, OperatingSystem operatingSystem, IsActive isActive, bool hasUserEnabledNotifications)
     {
         var pairDevice = new PairDevice(Guid.NewGuid(), deviceName, fcmToken, userId, operatingSystem, isActive);
-        pairDevice.RaiseDomainEvent(new PairDeviceCreatedDomainEvent(pairDevice.Id));
+        pairDevice.RaiseDomainEvent(new PairDeviceCreatedDomainEvent(pairDevice.Id, userId, hasUserEnabledNotifications));
         return pairDevice;
     }
 
