@@ -18,8 +18,9 @@ internal sealed class CreatePairDeviceCommandHandler(
         var userId = request.UserId;
         var operatingSystem = Enum.Parse<Domain.PairDevice.OperatingSystem>(request.OperatingSystem);
         var isActive = new IsActive(request.IsActive);
+        var hasUserEnabledNotifications = request.HasUserEnabledNotifications;
 
-        var pairDevice = PairDevice.Create(deviceName, fcmToken, userId, operatingSystem, isActive);
+        var pairDevice = PairDevice.Create(deviceName, fcmToken, userId, operatingSystem, isActive, hasUserEnabledNotifications);
 
         pairDeviceRepository.Add(pairDevice);
         await unitOfWork.SaveChangesAsync(cancellationToken);
