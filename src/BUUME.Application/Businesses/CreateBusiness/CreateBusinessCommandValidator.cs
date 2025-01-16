@@ -25,12 +25,10 @@ internal sealed class CreateBusinessCommandValidator : AbstractValidator<CreateB
         RuleFor(x => x.TaxOfficeId)
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingTaxOffice);
-        
+
         RuleFor(x => x.Name)
             .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingName)
-            .Matches("^[a-zA-ZÇçĞğİıÖöŞşÜü]+( [a-zA-ZÇçĞğİıÖöŞşÜü]+)*$")
-            .WithErrorCode(BusinessErrorCodes.InvalidName);
+            .WithErrorCode(BusinessErrorCodes.MissingName);
         
         RuleFor(x => x.Email)
             .EmailAddress()
