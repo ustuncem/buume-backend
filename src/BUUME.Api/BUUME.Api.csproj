@@ -29,8 +29,4 @@
       <ProjectReference Include="..\BUUME.Infrastructure\BUUME.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Controllers\PairDevice\" />
-    </ItemGroup>
-
 </Project>
