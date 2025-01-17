@@ -1,4 +1,5 @@
 using FluentValidation;
+using OperatingSystem = BUUME.Domain.PairDevice.OperatingSystem;
 
 namespace BUUME.Application.PairDevices.CreatePairDevice;
 
@@ -8,24 +9,19 @@ internal sealed class CreatePairDeviceCommandValidator : AbstractValidator<Creat
     {
         RuleFor(x => x.DeviceName)
             .NotEmpty()
-            .WithErrorCode(PairDeviceErrorCodes.CreatePairDevice.MissingDeviceName)
-            .Matches("^[a-zA-ZÇçĞğİıÖöŞşÜü0-9]+( [a-zA-ZÇçĞğİıÖöŞşÜü0-9]+)*$")
-            .WithErrorCode(PairDeviceErrorCodes.CreatePairDevice.InvalidDeviceName);
+            .WithErrorCode(PairDeviceErrorCodes.MissingDeviceName);
 
         RuleFor(x => x.FcmToken)
             .NotEmpty()
-            .WithErrorCode(PairDeviceErrorCodes.CreatePairDevice.MissingFcmToken);
-
-        RuleFor(x => x.UserId)
-            .NotEmpty()
-            .WithErrorCode(PairDeviceErrorCodes.CreatePairDevice.MissingUserId);
+            .WithErrorCode(PairDeviceErrorCodes.MissingFcmToken);
 
         RuleFor(x => x.OperatingSystem)
-            .IsInEnum()
-            .WithErrorCode(PairDeviceErrorCodes.CreatePairDevice.InvalidOperatingSystem);
-
-        RuleFor(x => x.IsActive)
-            .NotNull()
-            .WithErrorCode(PairDeviceErrorCodes.CreatePairDevice.MissingIsActive);
+            .Must(ValidNotificationStatus)
+            .WithErrorCode(PairDeviceErrorCodes.InvalidOperatingSystem);
+    }
+    
+    private static bool ValidNotificationStatus(int hasAllowedNotifications)
+    {
+        return Enum.IsDefined(typeof(OperatingSystem), hasAllowedNotifications);
     }
 }

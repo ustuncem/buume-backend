@@ -87,9 +87,9 @@ public sealed class User : Entity
         IsPhoneNumberVerified = new IsPhoneNumberVerified(true);
     }
 
-    public void ToggleNotificationPermission()
+    public void ToggleNotificationPermission(bool  hasAllowedNotificationPermission)
     {
-        HasAllowedNotifications = new HasAllowedNotifications(!HasAllowedNotifications.Value);
+        HasAllowedNotifications = new HasAllowedNotifications(hasAllowedNotificationPermission);
         UpdatedAt = DateTime.UtcNow;
     }
 }

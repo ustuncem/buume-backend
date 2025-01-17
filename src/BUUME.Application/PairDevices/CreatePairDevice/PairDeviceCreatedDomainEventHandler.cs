@@ -5,35 +5,17 @@ using MediatR;
 
 namespace BUUME.Application.PairDevices.CreatePairDevice;
 
-internal sealed class PairDeviceCreatedDomainEventHandler : INotificationHandler<PairDeviceCreatedDomainEvent>
+internal sealed class PairDeviceCreatedDomainEventHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
+    : INotificationHandler<PairDeviceCreatedDomainEvent>
 {
-    private readonly IUserRepository _userRepository;
-    private readonly IUnitOfWork _unitOfWork;
-
-    public PairDeviceCreatedDomainEventHandler(IUserRepository userRepository, IUnitOfWork unitOfWork)
-    {
-        _userRepository = userRepository;
-        _unitOfWork = unitOfWork;
-    }
-
     public async Task Handle(PairDeviceCreatedDomainEvent notification, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"PairDeviceCreatedDomainEventHandler = {notification.PairDeviceId}");
+        var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken);
 
-        if (notification.HasUserEnabledNotifications)
-        {
-            var user = await _userRepository.GetByIdAsync(notification.UserId, cancellationToken);
-            if (user == null)
-            {
-                Console.WriteLine($"User not found: {notification.UserId}");
-                return;
-            }
-
-            user.ToggleNotificationPermission();
-
-            _userRepository.Update(user);
-
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        if (user == null) return;
+        
+        user.ToggleNotificationPermission(notification.HasUserEnabledNotifications);
+        userRepository.Update(user);
+        await unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

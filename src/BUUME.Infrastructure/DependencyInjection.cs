@@ -9,6 +9,7 @@ using BUUME.Domain.Cities;
 using BUUME.Domain.Countries;
 using BUUME.Domain.Districts;
 using BUUME.Domain.Files;
+using BUUME.Domain.PairDevice;
 using BUUME.Domain.Regions;
 using BUUME.Domain.TaxOffices;
 using BUUME.Domain.Users;
@@ -87,6 +88,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IFileRepository, FileRepository>();
         services.AddScoped<IBusinessRepository, BusinessRepository>();
+        services.AddScoped<IPairDeviceRepository, PairDeviceRepository>();
 
         return services;
     }

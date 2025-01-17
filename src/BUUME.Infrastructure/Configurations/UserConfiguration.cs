@@ -32,6 +32,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
             HasConversion(isPhoneNumberVerified => isPhoneNumberVerified != null && isPhoneNumberVerified.Value, 
                 value => new IsPhoneNumberVerified(value))
             .HasDefaultValue(new IsPhoneNumberVerified(false));
+
+        builder.Property(u => u.HasAllowedNotifications).HasConversion(
+            hasAllowedNotifications => hasAllowedNotifications.Value,
+            value => new HasAllowedNotifications(value)
+        ).IsRequired();
         
         builder.HasOne<File>().WithMany().HasForeignKey(city => city.ProfilePhotoId).OnDelete(DeleteBehavior.SetNull);
 
