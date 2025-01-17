@@ -16,11 +16,13 @@ services:
   buume-db:
     image: postgis/postgis:latest
     container_name: BUUME.Db
+    build:
+      context: .
+      dockerfile: src/BUUME.Api/DockerfilePostGIS
     environment:
       - POSTGRES_DB=BUUME
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - POSTGRES_INITDB_ARGS="--locale=tr_TR.UTF-8"
     volumes:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
@@ -34,7 +36,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - ./.containers/database:/var/lib/postgresql/data
+      - ./.containers/identity_database:/var/lib/postgresql/data
     expose:
       - "5434"
     ports:

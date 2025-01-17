@@ -1,0 +1,9 @@
+FROM postgis/postgis:latest
+
+# Install locales and generate tr_TR.UTF-8
+RUN apt-get update; apt-get install -y --no-install-recommends locales; rm -rf /var/lib/apt/lists/*; \
+	localedef -i tr_TR -c -f UTF-8 -A /usr/share/locale/locale.alias tr_TR.UTF-8
+
+# Set default environment variables for locale
+ENV LANG=tr_TR.UTF-8
+ENV LC_ALL=tr_TR.UTF-8
