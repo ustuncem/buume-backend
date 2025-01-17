@@ -1,3 +1,3 @@
 namespace BUUME.Domain.Businesses;
 
-public record AddressInfo(string Address, decimal Latitude, decimal Longitude);
+public record Address(string Value);

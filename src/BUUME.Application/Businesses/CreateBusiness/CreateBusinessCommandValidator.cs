@@ -21,10 +21,6 @@ internal sealed class CreateBusinessCommandValidator : AbstractValidator<CreateB
         RuleFor(x => x.DistrictId)
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingDistrict);
-        
-        RuleFor(x => x.TaxOfficeId)
-            .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingTaxOffice);
 
         RuleFor(x => x.Name)
             .NotEmpty()
@@ -49,14 +45,6 @@ internal sealed class CreateBusinessCommandValidator : AbstractValidator<CreateB
         RuleFor(x => x.Longitude)
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingLongitude);
-        
-        RuleFor(x => x.TradeName)
-            .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingTradeName);
-        
-        RuleFor(x => x.Vkn)
-            .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingVkn);
         
         RuleFor(x => x.IsKvkkApproved)
             .NotEmpty()

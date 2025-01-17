@@ -14,7 +14,7 @@ services:
     ports:
       - "8080:8080"      
   buume-db:
-    image: postgres:latest
+    image: postgis/postgis:latest
     container_name: BUUME.Db
     environment:
       - POSTGRES_DB=BUUME

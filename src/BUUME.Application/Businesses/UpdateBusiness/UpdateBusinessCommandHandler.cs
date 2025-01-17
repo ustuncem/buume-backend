@@ -44,11 +44,10 @@ internal sealed class UpdateBusinessCommandHandler(
         var countryId = request.CountryId;
         var cityId = request.CityId;
         var districtId = request.DistrictId;
-        var taxOfficeId = request.TaxOfficeId;
         var baseInfo = new BaseInfo(request.Name, request.Email, request.PhoneNumber, request.Description,
             request.OnlineOrderLink, request.MenuLink, request.WebsiteLink);
-        var addressInfo = new AddressInfo(request.Address, request.Latitude, request.Longitude);
-        var taxInfo = new TaxInfo(request.TradeName, request.Vkn);
+        var addressInfo = new Address(request.Address);
+        var location = Location.Create(request.Latitude, request.Longitude);
         var isKvkkApproved = new IsKvkkApproved(request.IsKvkkApproved);
         
         // Handle working hours if any
@@ -56,7 +55,7 @@ internal sealed class UpdateBusinessCommandHandler(
         TimeSpan? closingTime = !string.IsNullOrEmpty(request.EndTime) ? TimeSpan.Parse(request.EndTime) : null;
         var workingHours = openingTime != null && closingTime != null ? WorkingHours.Create(openingTime.Value, closingTime.Value) : null;
         
-        storedBusiness.Update(logoId, ownerId, countryId, cityId, districtId, taxOfficeId, baseInfo, addressInfo, taxInfo, isKvkkApproved, workingHours);
+        storedBusiness.Update(logoId, ownerId, countryId, cityId, districtId, baseInfo, addressInfo, location, isKvkkApproved, workingHours);
         
         businessRepository.Update(storedBusiness);
         await unitOfWork.SaveChangesAsync(cancellationToken);
