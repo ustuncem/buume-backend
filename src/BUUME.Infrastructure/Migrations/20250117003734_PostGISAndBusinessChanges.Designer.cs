@@ -3,6 +3,7 @@ using System;
 using BUUME.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BUUME.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250117003734_PostGISAndBusinessChanges")]
+    partial class PostGISAndBusinessChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -371,59 +374,6 @@ namespace BUUME.Infrastructure.Migrations
                     b.ToTable("files", (string)null);
                 });
 
-            modelBuilder.Entity("BUUME.Domain.PairDevice.PairDevice", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("deleted_at");
-
-                    b.Property<string>("DeviceName")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("device_name");
-
-                    b.Property<string>("FcmToken")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("character varying(300)")
-                        .HasColumnName("fcm_token");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_active");
-
-                    b.Property<int>("OperatingSystem")
-                        .HasColumnType("integer")
-                        .HasColumnName("operating_system");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("user_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_pair_device");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasDatabaseName("ix_pair_device_user_id");
-
-                    b.ToTable("pair_device", (string)null);
-                });
-
             modelBuilder.Entity("BUUME.Domain.Regions.Region", b =>
                 {
                     b.Property<Guid>("Id")
@@ -525,10 +475,6 @@ namespace BUUME.Infrastructure.Migrations
                     b.Property<int?>("Gender")
                         .HasColumnType("integer")
                         .HasColumnName("gender");
-
-                    b.Property<bool>("HasAllowedNotifications")
-                        .HasColumnType("boolean")
-                        .HasColumnName("has_allowed_notifications");
 
                     b.Property<bool?>("IsPhoneNumberVerified")
                         .ValueGeneratedOnAdd()
@@ -785,16 +731,6 @@ namespace BUUME.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_districts_cities_city_id");
-                });
-
-            modelBuilder.Entity("BUUME.Domain.PairDevice.PairDevice", b =>
-                {
-                    b.HasOne("BUUME.Domain.Users.User", null)
-                        .WithOne()
-                        .HasForeignKey("BUUME.Domain.PairDevice.PairDevice", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_pair_device_users_user_id");
                 });
 
             modelBuilder.Entity("BUUME.Domain.Regions.Region", b =>

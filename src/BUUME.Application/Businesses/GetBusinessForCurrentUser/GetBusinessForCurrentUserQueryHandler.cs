@@ -28,11 +28,9 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
                 b.base_info_name AS Name,
                 b.base_info_email AS Email,
                 b.base_info_phone_number AS PhoneNumber,
-                b.address_info_address AS Address,
+                b.address AS Address,
                 b.address_info_latitude AS Latitude,
                 b.address_info_longitude AS Longitude,
-                b.tax_info_trade_name AS TradeName,
-                b.tax_info_vkn AS Vkn,
                 b.is_kvkk_approved AS IsKvkkApproved,
                 TO_CHAR(b.working_hours_start_time, 'HH24:MI') AS StartTime,
                 TO_CHAR(b.working_hours_end_time, 'HH24:MI') AS EndTime,
@@ -46,15 +44,12 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
                 ci.id AS CityId,
                 ci.name AS CityName,
                 d.id AS DistrictId,
-                d.name AS DistrictName,
-                t.id AS TaxOfficeId,
-                t.name AS TaxOfficeName
+                d.name AS DistrictName
             FROM businesses b
             LEFT JOIN files f ON b.logo_id = f.id
             LEFT JOIN countries c ON b.country_id = c.id
             LEFT JOIN cities ci ON b.city_id = ci.id
             LEFT JOIN districts d ON b.district_id = d.id
-            LEFT JOIN tax_offices t ON b.tax_office_id = t.id
             WHERE b.owner_id = @OwnerId;
             """;
 
@@ -83,16 +78,13 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
             CountryResponse, 
             CityResponse, 
             DistrictResponse,
-            TaxOfficeResponse,
             BusinessResponse>(
             sql,
-            (business, country, city, district, taxOffice) =>
+            (business, country, city, district) =>
             {
                 business.Country = country;
                 business.City = city;
                 business.District = district;
-                business.TaxOffice = taxOffice;
-                
                 return business;
             },
             new {OwnerId = user.Id},

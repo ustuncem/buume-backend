@@ -18,10 +18,6 @@ internal sealed class UpdateBusinessCommandValidator : AbstractValidator<UpdateB
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingDistrict);
         
-        RuleFor(x => x.TaxOfficeId)
-            .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingTaxOffice);
-        
         RuleFor(x => x.Name)
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingName)
@@ -49,14 +45,6 @@ internal sealed class UpdateBusinessCommandValidator : AbstractValidator<UpdateB
         RuleFor(x => x.Longitude)
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingLongitude);
-        
-        RuleFor(x => x.TradeName)
-            .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingTradeName);
-        
-        RuleFor(x => x.Vkn)
-            .NotEmpty()
-            .WithErrorCode(BusinessErrorCodes.MissingVkn);
         
         RuleFor(x => x.IsKvkkApproved)
             .NotEmpty()

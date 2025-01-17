@@ -1,7 +1,5 @@
-using BUUME.Domain.BusinessCategories;
 using BUUME.Domain.Businesses.Events;
 using BUUME.SharedKernel;
-using File = BUUME.Domain.Files.File;
 
 namespace BUUME.Domain.Businesses;
 
@@ -14,10 +12,9 @@ public sealed class Business : Entity
         Guid countryId,
         Guid cityId,
         Guid districtId,
-        Guid taxOfficeId,
         BaseInfo baseInfo,
-        AddressInfo addressInfo, 
-        TaxInfo taxInfo, 
+        Address address, 
+        Location location,
         IsKvkkApproved isKvkkApproved, 
         WorkingHours? workingHours = null) : base(id)
     {
@@ -26,10 +23,9 @@ public sealed class Business : Entity
         CountryId = countryId;
         CityId = cityId;
         DistrictId = districtId;
-        TaxOfficeId = taxOfficeId;
         BaseInfo = baseInfo;
-        AddressInfo = addressInfo;
-        TaxInfo = taxInfo;
+        Address = address;
+        Location = location;
         IsKvkkApproved = isKvkkApproved;
         WorkingHours = workingHours;
     }
@@ -41,10 +37,9 @@ public sealed class Business : Entity
     public Guid CountryId { get; private set; }
     public Guid CityId { get; private set; }
     public Guid DistrictId { get; private set; }
-    public Guid TaxOfficeId { get; private set; }
     public BaseInfo BaseInfo { get; private set; }
-    public AddressInfo AddressInfo { get; private set; }
-    public TaxInfo TaxInfo { get; private set; }
+    public Address Address { get; private set; }
+    public Location Location { get; private set; }
     public IsKvkkApproved IsKvkkApproved { get; private set; }
     public WorkingHours? WorkingHours { get; private set; }
 
@@ -54,10 +49,9 @@ public sealed class Business : Entity
         Guid countryId,
         Guid cityId,
         Guid districtId,
-        Guid taxOfficeId,
         BaseInfo baseInfo,
-        AddressInfo addressInfo, 
-        TaxInfo taxInfo, 
+        Address address, 
+        Location location,
         IsKvkkApproved isKvkkApproved, 
         WorkingHours? workingHours = null
         )
@@ -69,10 +63,9 @@ public sealed class Business : Entity
             countryId,
             cityId,
             districtId,
-            taxOfficeId,
             baseInfo,
-            addressInfo,
-            taxInfo,
+            address,
+            location,
             isKvkkApproved,
             workingHours);
         
@@ -87,10 +80,9 @@ public sealed class Business : Entity
         Guid countryId,
         Guid cityId,
         Guid districtId,
-        Guid taxOfficeId,
         BaseInfo baseInfo,
-        AddressInfo addressInfo, 
-        TaxInfo taxInfo, 
+        Address address,
+        Location location,
         IsKvkkApproved isKvkkApproved, 
         WorkingHours? workingHours = null)
     {
@@ -99,10 +91,9 @@ public sealed class Business : Entity
         CountryId = countryId;
         CityId = cityId;
         DistrictId = districtId;
-        TaxOfficeId = taxOfficeId;
         BaseInfo = baseInfo;
-        AddressInfo = addressInfo;
-        TaxInfo = taxInfo;
+        Address = address;
+        Location = location;
         IsKvkkApproved = isKvkkApproved;
         WorkingHours = workingHours;
         UpdatedAt = DateTime.UtcNow;
