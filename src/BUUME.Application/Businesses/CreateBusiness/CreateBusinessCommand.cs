@@ -7,6 +7,7 @@ public record CreateBusinessCommand(
     Guid CityId,
     Guid DistrictId,
     string Logo,
+    string TaxDocument,
     string Name, 
     string Email, 
     string PhoneNumber,

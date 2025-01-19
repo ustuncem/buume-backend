@@ -12,7 +12,15 @@ internal static class FileErrors
         "File.UploadError",
         "The file cant be uploaded", ErrorType.Failure);
     
+    public static readonly Error TooLarge = new(
+        "File.TooLarge",
+        "The file size is too large", ErrorType.Failure);
+    
     public static readonly Error Base64StringEmpty = new(
         "File.Base64StringEmpty",
         "The base64 string cant be empty", ErrorType.Failure);
+    
+    public static readonly Error UnknowError = new(
+        "File.UnknowError",
+        "Beklenmeyen bir hata oluştu.", ErrorType.Failure);
 }

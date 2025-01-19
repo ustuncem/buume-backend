@@ -87,6 +87,12 @@ namespace BUUME.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
+                    b.Property<bool>("IsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_enabled");
+
                     b.Property<bool>("IsKvkkApproved")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -98,7 +104,7 @@ namespace BUUME.Infrastructure.Migrations
                         .HasColumnType("geometry(Point, 4326)")
                         .HasColumnName("location");
 
-                    b.Property<Guid>("LogoId")
+                    b.Property<Guid?>("LogoId")
                         .HasColumnType("uuid")
                         .HasColumnName("logo_id");
 
@@ -106,9 +112,17 @@ namespace BUUME.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
+                    b.Property<Guid>("TaxDocumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tax_document_id");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("ValidatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("validator_id");
 
                     b.HasKey("Id")
                         .HasName("pk_businesses");
@@ -133,6 +147,12 @@ namespace BUUME.Infrastructure.Migrations
                     b.HasIndex("OwnerId")
                         .IsUnique()
                         .HasDatabaseName("ix_businesses_owner_id");
+
+                    b.HasIndex("TaxDocumentId")
+                        .HasDatabaseName("ix_businesses_tax_document_id");
+
+                    b.HasIndex("ValidatorId")
+                        .HasDatabaseName("ix_businesses_validator_id");
 
                     b.ToTable("businesses", (string)null);
                 });
@@ -671,8 +691,6 @@ namespace BUUME.Infrastructure.Migrations
                     b.HasOne("BUUME.Domain.Files.File", null)
                         .WithMany()
                         .HasForeignKey("LogoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_businesses_file_logo_id");
 
                     b.HasOne("BUUME.Domain.Users.User", null)
@@ -681,6 +699,18 @@ namespace BUUME.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_businesses_users_owner_id");
+
+                    b.HasOne("BUUME.Domain.Files.File", null)
+                        .WithMany()
+                        .HasForeignKey("TaxDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_businesses_file_tax_document_id");
+
+                    b.HasOne("BUUME.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("ValidatorId")
+                        .HasConstraintName("fk_businesses_users_validator_id");
 
                     b.OwnsOne("BUUME.Domain.Businesses.BaseInfo", "BaseInfo", b1 =>
                         {

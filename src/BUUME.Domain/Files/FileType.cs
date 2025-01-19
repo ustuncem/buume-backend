@@ -5,6 +5,7 @@ public record FileType
     public static readonly FileType Png = new("image/png");
     public static readonly FileType Jpeg = new("image/jpeg");
     public static readonly FileType Webp = new("image/webp");
+    public static readonly FileType Pdf = new("application/pdf");
     
     public string Value { get; init; }
     
@@ -19,6 +20,7 @@ public record FileType
     [
         Png,
         Jpeg,
-        Webp
+        Webp,
+        Pdf
     ];
 }

@@ -27,6 +27,14 @@ internal sealed class BusinessConfiguration : IEntityTypeConfiguration<Business>
             navigationBuilder.Property(x => x.PhoneNumber).HasMaxLength(100).IsRequired();
             navigationBuilder.Property(x => x.Description).HasMaxLength(2000);
         });
+        
+        builder.Property(b => b.IsEnabled)
+            .HasConversion(
+                isEnabled => isEnabled.Value,
+                value => new IsEnabled(value)
+            )
+            .HasDefaultValue(new IsEnabled(false))
+            .IsRequired();
 
         builder.Property(b => b.Location)
             .HasConversion(
@@ -45,7 +53,9 @@ internal sealed class BusinessConfiguration : IEntityTypeConfiguration<Business>
 
         builder.OwnsOne(x => x.WorkingHours);
 
-        builder.HasOne<File>().WithMany().HasForeignKey(b => b.LogoId);
+        builder.HasOne<File>().WithMany().HasForeignKey(b => b.LogoId).OnDelete(DeleteBehavior.ClientSetNull);
+        builder.HasOne<File>().WithMany().HasForeignKey(b => b.TaxDocumentId);
+        builder.HasOne<User>().WithMany().HasForeignKey(b => b.ValidatorId).OnDelete(DeleteBehavior.ClientSetNull);
         builder.HasOne<User>().WithOne().HasForeignKey<Business>(b => b.OwnerId);
         builder.HasOne<Country>().WithMany().HasForeignKey(b => b.CountryId);
         builder.HasOne<City>().WithMany().HasForeignKey(b => b.CityId);

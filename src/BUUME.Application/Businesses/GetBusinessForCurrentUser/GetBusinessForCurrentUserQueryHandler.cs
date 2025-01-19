@@ -29,8 +29,8 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
                 b.base_info_email AS Email,
                 b.base_info_phone_number AS PhoneNumber,
                 b.address AS Address,
-                b.address_info_latitude AS Latitude,
-                b.address_info_longitude AS Longitude,
+                ST_X(location::geometry) AS longitude,
+                ST_Y(location::geometry) AS latitude,
                 b.is_kvkk_approved AS IsKvkkApproved,
                 TO_CHAR(b.working_hours_start_time, 'HH24:MI') AS StartTime,
                 TO_CHAR(b.working_hours_end_time, 'HH24:MI') AS EndTime,
@@ -38,7 +38,9 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
                 b.base_info_online_order_link AS OnlineOrderLink,
                 b.base_info_menu_link AS MenuLink,
                 b.base_info_website_link AS WebsiteLink,
+                f.id as LogoId,
                 f.path as Logo,
+                td.path as TaxDocument,
                 c.id AS CountryId,
                 c.name AS CountryName,
                 ci.id AS CityId,
@@ -47,6 +49,7 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
                 d.name AS DistrictName
             FROM businesses b
             LEFT JOIN files f ON b.logo_id = f.id
+            LEFT JOIN files td ON b.tax_document_id = td.id
             LEFT JOIN countries c ON b.country_id = c.id
             LEFT JOIN cities ci ON b.city_id = ci.id
             LEFT JOIN districts d ON b.district_id = d.id
@@ -62,12 +65,13 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
             JOIN business_categories bc ON bc.id = bbc.business_category_id
             WHERE
                 bbc.business_id = @BusinessId;
-            SELECT 
-                f.path AS CategoryId
+            SELECT
+                f.id AS BusinessFileId,
+                f.path AS BusinessFilePath
             FROM business_file bf
             JOIN files f ON bf.file_id = f.id
             WHERE 
-                bf.business_id = @BusinessId;
+                bf.business_id = @BusinessId AND f.path != @LogoPath;
             """;
 
 
@@ -88,16 +92,16 @@ internal sealed class GetBusinessForCurrentUserQueryHandler(
                 return business;
             },
             new {OwnerId = user.Id},
-            splitOn: "CountryId,CityId,DistrictId,TaxOfficeId");
+            splitOn: "CountryId,CityId,DistrictId");
         
         var business = businessList.FirstOrDefault();
         
         if (business == null) return Result.Failure<BusinessResponse>(BusinessErrors.NotFound);
         
-        var reader = await connection.QueryMultipleAsync(imagesAndCategoriesSql, new{business.BusinessId});
+        var reader = await connection.QueryMultipleAsync(imagesAndCategoriesSql, new{business.BusinessId, LogoPath = business.Logo});
         
         var categories = await reader.ReadAsync<BusinessCategoryResponse>();
-        var images = await reader.ReadAsync<string>();
+        var images = await reader.ReadAsync<BusinessFileResponse>();
         
         business.BusinessCategories = categories.ToArray();
         business.BusinessPhotos = images.ToArray();

@@ -32,6 +32,9 @@ internal sealed class CreateBusinessCommandHandler(
         
         // Handle logo and files
         var imageIds = await UploadLogoAndBusinessImagesIfAnyAsync(request.Logo, request.BusinessPhotos);
+        var taxDocumentId = await UploadTaxDocumentAsync(request.TaxDocument);
+        
+        if(taxDocumentId == null) return Result.Failure<Guid>(BusinessErrors.NoTaxDocumentUploaded);
         
         if(imageIds.Count == 0) return Result.Failure<Guid>(BusinessErrors.NoLogoUploaded);
 
@@ -53,7 +56,7 @@ internal sealed class CreateBusinessCommandHandler(
         TimeSpan? closingTime = !string.IsNullOrEmpty(request.EndTime) ? TimeSpan.Parse(request.EndTime) : null;
         var workingHours = openingTime != null && closingTime != null ? WorkingHours.Create(openingTime.Value, closingTime.Value) : null;
         
-        var business = Business.Create(logoId, ownerId, countryId, cityId, districtId, baseInfo, addressInfo, location, isKvkkApproved, workingHours);
+        var business = Business.Create(logoId, taxDocumentId.Value, ownerId, countryId, cityId, districtId, baseInfo, addressInfo, location, isKvkkApproved, workingHours);
         
         user.ToggleBusinessSwitch();
         userRepository.Update(user);
@@ -63,6 +66,22 @@ internal sealed class CreateBusinessCommandHandler(
         await HandleImages(imageIds.ToArray(), business.Id);
         
         return Guid.NewGuid();
+    }
+
+    private async Task<Guid?> UploadTaxDocumentAsync(string base64Pdf)
+    {
+        var result = await fileUploader.UploadImageFromBase64Async(base64Pdf);
+        if (!result.IsSuccess) return null;
+        
+        var file = File.Create(
+                result.Value.Size,
+                result.Value.Name,
+                result.Value.Path,
+                result.Value.Type
+            );
+        
+        fileRepository.Add(file);
+        return file.Id;
     }
 
     private async Task<List<Guid>> UploadLogoAndBusinessImagesIfAnyAsync(string logo64, string[]? businessImages64 = null)

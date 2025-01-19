@@ -3,6 +3,7 @@ using BUUME.Application.Businesses.CreateBusiness;
 using BUUME.Application.Businesses.GetBusinessForCurrentUser;
 using BUUME.Application.Businesses.GetBusinessHeaderForCurrentUser;
 using BUUME.Application.Businesses.UpdateBusiness;
+using BUUME.Application.Businesses.UpdateBusinessContent;
 using BUUME.SharedKernel;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -68,6 +69,21 @@ public class BusinessController(ISender sender) : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Result<Guid>>> UpdateBusiness(
         [FromBody] UpdateBusinessCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _sender.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+            return BadRequest(new { Error = result.Error });
+
+        return Ok(result);
+    }
+    
+    [HttpPut("content")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Result<Guid>>> UpdateBusinessContent(
+        [FromBody] UpdateBusinessContentCommand command,
         CancellationToken cancellationToken = default)
     {
         var result = await _sender.Send(command, cancellationToken);

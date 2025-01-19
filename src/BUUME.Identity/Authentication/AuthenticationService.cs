@@ -27,6 +27,10 @@ internal sealed class AuthenticationService(
         var result = await userManager.CreateAsync(newUser);
         if (!result.Succeeded) return Result.Failure<string>(AuthenticationErrors.UnknownError);
         
+        var roleResult = await userManager.AddToRoleAsync(newUser, Roles.User);
+        
+        if (!roleResult.Succeeded) return Result.Failure<string>(AuthenticationErrors.UnknownError);
+        
         var phoneNumberValidationToken = await userManager.GenerateTwoFactorTokenAsync(newUser, TokenOptions.DefaultPhoneProvider);
         
         return phoneNumberValidationToken;

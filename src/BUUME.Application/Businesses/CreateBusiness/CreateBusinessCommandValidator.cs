@@ -10,6 +10,10 @@ internal sealed class CreateBusinessCommandValidator : AbstractValidator<CreateB
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingLogo);
         
+        RuleFor(x => x.Logo)
+            .NotEmpty()
+            .WithErrorCode(BusinessErrorCodes.MissingTaxDocument);
+        
         RuleFor(x => x.CountryId)
             .NotEmpty()
             .WithErrorCode(BusinessErrorCodes.MissingCountry);

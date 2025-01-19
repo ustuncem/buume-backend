@@ -15,8 +15,6 @@ namespace BUUME.Application.Businesses.UpdateBusiness;
 internal sealed class UpdateBusinessCommandHandler(
     IUserRepository userRepository,
     IDbConnectionFactory factory,
-    IFileRepository fileRepository,
-    IFileUploader fileUploader,
     IUserContext userContext,
     IBusinessRepository businessRepository, 
     IUnitOfWork unitOfWork)
@@ -34,13 +32,8 @@ internal sealed class UpdateBusinessCommandHandler(
         
         if (storedBusiness == null) return Result.Failure<Guid>(BusinessErrors.NotFound);
         
-        // Handle logo and files
-        var imageIds = await UploadLogoAndBusinessImagesIfAnyAsync(request.Logo, request.BusinessPhotos);
-        
         if (!request.IsKvkkApproved) return Result.Failure<Guid>(BusinessErrors.KvkkNotApproved);
         
-        var logoId = imageIds.Count > 0 ? imageIds[0] : storedBusiness.LogoId;
-        var ownerId = user.Id;
         var countryId = request.CountryId;
         var cityId = request.CityId;
         var districtId = request.DistrictId;
@@ -55,56 +48,15 @@ internal sealed class UpdateBusinessCommandHandler(
         TimeSpan? closingTime = !string.IsNullOrEmpty(request.EndTime) ? TimeSpan.Parse(request.EndTime) : null;
         var workingHours = openingTime != null && closingTime != null ? WorkingHours.Create(openingTime.Value, closingTime.Value) : null;
         
-        storedBusiness.Update(logoId, ownerId, countryId, cityId, districtId, baseInfo, addressInfo, location, isKvkkApproved, workingHours);
+        storedBusiness.Update(countryId, cityId, districtId, baseInfo, addressInfo, location, isKvkkApproved, workingHours);
         
         businessRepository.Update(storedBusiness);
         await unitOfWork.SaveChangesAsync(cancellationToken);
         await HandleCategories(request.BusinessCategoryIds, storedBusiness.Id);
-        await HandleImages(imageIds.ToArray(), storedBusiness.Id);
         
         return Guid.NewGuid();
     }
-
-    private async Task<List<Guid>> UploadLogoAndBusinessImagesIfAnyAsync(string? logo64, string[]? businessImages64 = null)
-    {
-        List<Guid> imageIds = [];
-        
-        if (businessImages64 == null) return imageIds; 
-        
-        var logoUploadResult = await fileUploader.UploadImageFromBase64Async(logo64);
-        
-        if (!logoUploadResult.IsSuccess && !string.IsNullOrWhiteSpace(logo64)) return imageIds;
-        
-        var logo = File.Create(
-            logoUploadResult.Value.Size, 
-            logoUploadResult.Value.Name, 
-            logoUploadResult.Value.Path,
-            logoUploadResult.Value.Type);
-            
-        fileRepository.Add(logo);
-        imageIds.Add(logo.Id);
-
-        if (businessImages64 != null && businessImages64.Length > 0)
-        {
-            foreach (var businessImage in businessImages64)
-            {
-                var businessImageUploadResult = await fileUploader.UploadImageFromBase64Async(businessImage);
-                if (!businessImageUploadResult.IsSuccess) break;
-                
-                var businessImageFile = File.Create(
-                    businessImageUploadResult.Value.Size, 
-                    businessImageUploadResult.Value.Name, 
-                    businessImageUploadResult.Value.Path,
-                    businessImageUploadResult.Value.Type);
-            
-                fileRepository.Add(businessImageFile);
-                imageIds.Add(businessImageFile.Id);
-            }
-        }
-        
-        return imageIds;
-    }
-
+    
     private async Task HandleCategories(Guid[]? guids, Guid businessId)
     {
         if (guids == null || guids.Length == 0) return;
@@ -132,45 +84,6 @@ internal sealed class UpdateBusinessCommandHandler(
             });
             
             await connection.QueryAsync(deleteSql, new { BusinessId = businessId }, transaction);
-            await connection.ExecuteAsync(sql, parameters, transaction);
-
-            transaction.Commit();
-        }
-        catch
-        {
-            transaction.Rollback();
-            throw;
-        }
-    }
-    
-    private async Task HandleImages(Guid[]? guids, Guid businessId)
-    {
-        if (guids == null || guids.Length == 0) return;
-
-        const string deleteSql = 
-            """
-            DELETE FROM business_file WHERE business_id = @BusinessId
-            """;
-        
-        const string sql =
-            """
-            INSERT INTO business_file (business_id, file_id) VALUES (@BusinessId, @FileId)
-            """;
-        
-        using IDbConnection connection = factory.GetOpenConnection();
-        
-        using var transaction = connection.BeginTransaction();
-
-        try
-        {
-            var parameters = guids.Select(fileId => new
-            {
-                FileId = fileId,
-                BusinessId = businessId
-            });
-            
-            await connection.QueryAsync(deleteSql, new { BusinessId = businessId }, transaction);
-
             await connection.ExecuteAsync(sql, parameters, transaction);
 
             transaction.Commit();

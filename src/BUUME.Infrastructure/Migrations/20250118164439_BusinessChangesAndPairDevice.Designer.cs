@@ -13,8 +13,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BUUME.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250117003734_PostGISAndBusinessChanges")]
-    partial class PostGISAndBusinessChanges
+    [Migration("20250118164439_BusinessChangesAndPairDevice")]
+    partial class BusinessChangesAndPairDevice
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -90,6 +90,12 @@ namespace BUUME.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("district_id");
 
+                    b.Property<bool>("IsEnabled")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_enabled");
+
                     b.Property<bool>("IsKvkkApproved")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
@@ -109,9 +115,17 @@ namespace BUUME.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("owner_id");
 
+                    b.Property<Guid>("TaxDocumentId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tax_document_id");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
+
+                    b.Property<Guid?>("ValidatorId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("validator_id");
 
                     b.HasKey("Id")
                         .HasName("pk_businesses");
@@ -136,6 +150,12 @@ namespace BUUME.Infrastructure.Migrations
                     b.HasIndex("OwnerId")
                         .IsUnique()
                         .HasDatabaseName("ix_businesses_owner_id");
+
+                    b.HasIndex("TaxDocumentId")
+                        .HasDatabaseName("ix_businesses_tax_document_id");
+
+                    b.HasIndex("ValidatorId")
+                        .HasDatabaseName("ix_businesses_validator_id");
 
                     b.ToTable("businesses", (string)null);
                 });
@@ -374,6 +394,59 @@ namespace BUUME.Infrastructure.Migrations
                     b.ToTable("files", (string)null);
                 });
 
+            modelBuilder.Entity("BUUME.Domain.PairDevice.PairDevice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("deleted_at");
+
+                    b.Property<string>("DeviceName")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("device_name");
+
+                    b.Property<string>("FcmToken")
+                        .IsRequired()
+                        .HasMaxLength(300)
+                        .HasColumnType("character varying(300)")
+                        .HasColumnName("fcm_token");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_active");
+
+                    b.Property<int>("OperatingSystem")
+                        .HasColumnType("integer")
+                        .HasColumnName("operating_system");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_pair_device");
+
+                    b.HasIndex("UserId")
+                        .IsUnique()
+                        .HasDatabaseName("ix_pair_device_user_id");
+
+                    b.ToTable("pair_device", (string)null);
+                });
+
             modelBuilder.Entity("BUUME.Domain.Regions.Region", b =>
                 {
                     b.Property<Guid>("Id")
@@ -475,6 +548,10 @@ namespace BUUME.Infrastructure.Migrations
                     b.Property<int?>("Gender")
                         .HasColumnType("integer")
                         .HasColumnName("gender");
+
+                    b.Property<bool>("HasAllowedNotifications")
+                        .HasColumnType("boolean")
+                        .HasColumnName("has_allowed_notifications");
 
                     b.Property<bool?>("IsPhoneNumberVerified")
                         .ValueGeneratedOnAdd()
@@ -628,6 +705,18 @@ namespace BUUME.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_businesses_users_owner_id");
 
+                    b.HasOne("BUUME.Domain.Files.File", null)
+                        .WithMany()
+                        .HasForeignKey("TaxDocumentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_businesses_file_tax_document_id");
+
+                    b.HasOne("BUUME.Domain.Users.User", null)
+                        .WithMany()
+                        .HasForeignKey("ValidatorId")
+                        .HasConstraintName("fk_businesses_users_validator_id");
+
                     b.OwnsOne("BUUME.Domain.Businesses.BaseInfo", "BaseInfo", b1 =>
                         {
                             b1.Property<Guid>("BusinessId")
@@ -731,6 +820,16 @@ namespace BUUME.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_districts_cities_city_id");
+                });
+
+            modelBuilder.Entity("BUUME.Domain.PairDevice.PairDevice", b =>
+                {
+                    b.HasOne("BUUME.Domain.Users.User", null)
+                        .WithOne()
+                        .HasForeignKey("BUUME.Domain.PairDevice.PairDevice", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_pair_device_users_user_id");
                 });
 
             modelBuilder.Entity("BUUME.Domain.Regions.Region", b =>
