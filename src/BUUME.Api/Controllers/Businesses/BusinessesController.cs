@@ -1,5 +1,6 @@
 using Asp.Versioning;
 using BUUME.Application.Businesses.CreateBusiness;
+using BUUME.Application.Businesses.CreateBusinessContent;
 using BUUME.Application.Businesses.GetBusinessForCurrentUser;
 using BUUME.Application.Businesses.GetBusinessHeaderForCurrentUser;
 using BUUME.Application.Businesses.UpdateBusiness;
@@ -69,6 +70,21 @@ public class BusinessController(ISender sender) : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<Result<Guid>>> UpdateBusiness(
         [FromBody] UpdateBusinessCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var result = await _sender.Send(command, cancellationToken);
+
+        if (!result.IsSuccess)
+            return BadRequest(new { Error = result.Error });
+
+        return Ok(result);
+    }
+    
+    [HttpPost("content")]
+    [ProducesResponseType(typeof(Result<Guid>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<Result<Guid>>> CreateBusinessContent(
+        [FromBody] CreateBusinessContentCommand command,
         CancellationToken cancellationToken = default)
     {
         var result = await _sender.Send(command, cancellationToken);
