@@ -18,9 +18,6 @@ internal sealed class UpdateMeCommandValidator : AbstractValidator<UpdateMeComma
 
         RuleFor(x => x.Email)
             .EmailAddress().WithErrorCode(UserErrorCodes.UpdateMe.InvalidEmail);
-
-        RuleFor(person => person.BirthDate)
-            .Must(BeAValidBirthDate).WithErrorCode(UserErrorCodes.UpdateMe.InvalidBirthDate);
         
         RuleFor(user => user.Gender)
             .Must(BeAValidGender).WithErrorCode(UserErrorCodes.UpdateMe.InvalidGender);

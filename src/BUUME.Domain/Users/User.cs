@@ -43,26 +43,16 @@ public sealed class User : Entity
         FirstName? firstName,
         LastName? lastName,
         Email? email,
-        PhoneNumber phoneNumber,
-        DateTime? birthDate,
         Gender? gender,
         Guid? profilePhotoId = null)
     {
-        var isUserInValidAge = AgeCheckService.IsValidAge(birthDate);
-
-        if (!isUserInValidAge) return Result.Failure(UserErrors.NotInValidAge);
-
         FirstName = firstName;
         LastName = lastName;
         Email = email;
-        PhoneNumber = phoneNumber;
-        BirthDate = birthDate;
         Gender = gender;
         ProfilePhotoId = profilePhotoId;
         UpdatedAt = DateTime.UtcNow;
-
-        if (phoneNumber != PhoneNumber) IsPhoneNumberVerified = new IsPhoneNumberVerified(false);
-
+        
         RaiseDomainEvent(new UserUpdatedDomainEvent(Id));
 
         return Result.Success();
